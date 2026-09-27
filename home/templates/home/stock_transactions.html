@@ -1,0 +1,222 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Stock Transactions
+{% endblock %}
+
+{% block content %}
+
+<section class="stock-transactions-page">
+
+    <!-- HERO -->
+    <div class="stock-transactions-hero">
+
+        <div class="stock-transactions-container">
+
+            <div>
+
+                <p class="stock-transactions-label">
+                    INVENTORY MANAGEMENT
+                </p>
+
+                <h1>
+                    Stock<br>
+                    Transactions
+                </h1>
+
+                <p class="stock-transactions-subtitle">
+                    Track every stock movement recorded in Local:Byte inventory.
+                </p>
+
+            </div>
+
+            <div class="stock-transactions-navigation">
+
+                <a href="{% url 'manager_dashboard' %}">
+                    ← Dashboard
+                </a>
+
+                <a href="{% url 'inventory' %}">
+                    Inventory
+                </a>
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <main class="stock-transactions-container stock-transactions-main">
+
+        <!-- HEADER -->
+        <div class="stock-transactions-section-header">
+
+            <div>
+
+                <p class="stock-transactions-label">
+                    TRANSACTION HISTORY
+                </p>
+
+                <h2>
+                    Stock Activity
+                </h2>
+
+            </div>
+
+            <span class="stock-transactions-count">
+                {{ transactions|length }} Transactions
+            </span>
+
+        </div>
+
+
+        {% if transactions %}
+
+            <div class="stock-transactions-list">
+
+                {% for transaction in transactions %}
+
+                    <article class="stock-transaction-card">
+
+                        <!-- LEFT -->
+                        <div class="stock-transaction-main">
+
+                            <div class="stock-transaction-icon">
+                                {{ transaction.inventory_item.name|first|upper }}
+                            </div>
+
+                            <div>
+
+                                <span class="stock-transaction-small-label">
+                                    INVENTORY ITEM
+                                </span>
+
+                                <h3>
+                                    {{ transaction.inventory_item.name }}
+                                </h3>
+
+                                <p>
+                                    {{ transaction.get_transaction_type_display }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TYPE -->
+                        <div class="stock-transaction-type">
+
+                            <span>
+                                TRANSACTION
+                            </span>
+
+                            <strong>
+                                {{ transaction.get_transaction_type_display }}
+                            </strong>
+
+                        </div>
+
+
+                        <!-- QUANTITY -->
+                        <div class="stock-transaction-quantity">
+
+                            <span>
+                                QUANTITY
+                            </span>
+
+                            <strong>
+                                {{ transaction.quantity }}
+                                <small>
+                                    {{ transaction.inventory_item.unit }}
+                                </small>
+                            </strong>
+
+                        </div>
+
+
+                        <!-- DATE -->
+                        <div class="stock-transaction-date">
+
+                            <span>
+                                DATE
+                            </span>
+
+                            <strong>
+                                {{ transaction.created_at|date:"d M Y" }}
+                            </strong>
+
+                            <small>
+                                {{ transaction.created_at|date:"H:i" }}
+                            </small>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="stock-transactions-empty">
+
+                <div class="stock-transactions-empty-icon">
+                    —
+                </div>
+
+                <h2>
+                    No transactions yet
+                </h2>
+
+                <p>
+                    Stock transactions will appear here once
+                    inventory activity has been recorded.
+                </p>
+
+                <a href="{% url 'inventory' %}">
+                    Manage Inventory →
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- FOOTER ACTION -->
+        <div class="stock-transactions-footer">
+
+            <div>
+
+                <p class="stock-transactions-label">
+                    INVENTORY
+                </p>
+
+                <h3>
+                    Need to update your stock?
+                </h3>
+
+            </div>
+
+            <a href="{% url 'inventory' %}">
+                Manage Inventory
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </main>
+
+</section>
+
+{% endblock %}

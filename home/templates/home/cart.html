@@ -1,0 +1,789 @@
+{% extends "home/base.html" %}
+
+
+{% block title %}
+    Local:Byte | My Cart
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================
+     CART PAGE
+========================= -->
+
+<section class="cart-page">
+
+    <div class="page-container">
+
+
+        <!-- =========================
+             CART HEADER
+        ========================== -->
+
+        <div class="cart-header">
+
+            <p class="section-label">
+                LOCAL:BYTE
+            </p>
+
+            <h1>
+                Your Cart
+            </h1>
+
+            <p>
+                Review your items before checkout.
+            </p>
+
+        </div>
+
+
+
+        {% if cart_items %}
+
+
+            <!-- =========================
+                 CART LAYOUT
+            ========================== -->
+
+            <div class="cart-layout">
+
+
+                <!-- =========================
+                     CART ITEMS
+                ========================== -->
+
+                <div class="cart-items"
+                     id="cart-items">
+
+
+                    {% for item in cart_items %}
+
+
+                        <div class="cart-item-card"
+                             data-item-id="{{ item.id }}">
+
+
+                            <!-- =========================
+                                 ITEM INFO
+                            ========================== -->
+
+                            <div class="cart-item-info">
+
+                                <h2>
+                                    {{ item.menu_item.name }}
+                                </h2>
+
+                                <p class="cart-item-price">
+                                    ₹{{ item.menu_item.price }}
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- =========================
+                                 QUANTITY
+                            ========================== -->
+
+                            <div class="cart-quantity">
+
+
+                                <form
+                                    method="post"
+                                    action="{% url 'decrease_quantity' item.id %}"
+                                    class="quantity-form"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="quantity-button"
+                                    >
+                                        −
+                                    </button>
+
+                                </form>
+
+
+                                <span class="item-quantity">
+                                    {{ item.quantity }}
+                                </span>
+
+
+                                <form
+                                    method="post"
+                                    action="{% url 'increase_quantity' item.id %}"
+                                    class="quantity-form"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="quantity-button"
+                                    >
+                                        +
+                                    </button>
+
+                                </form>
+
+
+                            </div>
+
+
+
+                            <!-- =========================
+                                 SUBTOTAL
+                            ========================== -->
+
+                            <div class="cart-item-subtotal">
+
+                                <p>
+                                    Subtotal
+                                </p>
+
+                                <strong>
+                                    ₹{{ item.item_subtotal }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <!-- =========================
+                                 REMOVE
+                            ========================== -->
+
+                            <form
+                                method="post"
+                                action="{% url 'remove_from_cart' item.id %}"
+                                class="remove-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="remove-button"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                    <!-- =========================
+                         CLEAR CART
+                    ========================== -->
+
+                    <form
+                        method="post"
+                        action="{% url 'clear_cart' %}"
+                        class="clear-cart-form"
+                        id="clear-cart-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="clear-cart-button"
+                        >
+                            Clear Cart
+                        </button>
+
+                    </form>
+
+
+                </div>
+
+
+
+                <!-- =========================
+                     CART SUMMARY
+                ========================== -->
+
+                <aside class="cart-summary">
+
+                    <p class="section-label">
+                        ORDER SUMMARY
+                    </p>
+
+                    <h2>
+                        Your Order
+                    </h2>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Items
+                        </span>
+
+                        <span id="cart-item-count">
+                            {{ cart_items|length }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="cart-total">
+                            ₹{{ total }}
+                        </strong>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'checkout' %}"
+                        class="checkout-button"
+                    >
+                        Proceed to Checkout
+                    </a>
+
+
+                    <a
+                        href="{% url 'menu' %}"
+                        class="continue-shopping"
+                    >
+                        ← Continue Shopping
+                    </a>
+
+
+                </aside>
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =========================
+                 EMPTY CART
+            ========================== -->
+
+            <div class="empty-cart"
+                 id="empty-cart">
+
+
+                <div class="empty-cart-icon">
+                    🛒
+                </div>
+
+
+                <h2>
+                    Your cart is empty.
+                </h2>
+
+
+                <p>
+                    Looks like you haven't added anything yet.
+                </p>
+
+
+                <a
+                    href="{% url 'menu' %}"
+                    class="hero-button primary-button"
+                >
+                    Explore Menu
+                </a>
+
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     CART JAVASCRIPT
+========================= -->
+
+<script>
+
+
+    /* =========================
+       CSRF TOKEN
+    ========================== */
+
+    function getCSRFToken(form) {
+
+        const csrfInput = form.querySelector(
+            'input[name="csrfmiddlewaretoken"]'
+        );
+
+        return csrfInput.value;
+
+    }
+
+
+
+    /* =========================
+       UPDATE CART TOTAL
+    ========================== */
+
+    function updateCartTotal(total) {
+
+        const totalElement =
+            document.getElementById("cart-total");
+
+        if (totalElement) {
+
+            totalElement.textContent =
+                "₹" + total.toFixed(2);
+
+        }
+
+    }
+
+
+
+    /* =========================
+       UPDATE ITEM COUNT
+    ========================== */
+
+    function updateItemCount() {
+
+        const cards =
+            document.querySelectorAll(
+                ".cart-item-card"
+            );
+
+        const countElement =
+            document.getElementById(
+                "cart-item-count"
+            );
+
+        if (countElement) {
+
+            countElement.textContent =
+                cards.length;
+
+        }
+
+    }
+
+
+
+    /* =========================
+       SHOW EMPTY CART
+    ========================== */
+
+    function showEmptyCart() {
+
+        const cartItems =
+            document.getElementById(
+                "cart-items"
+            );
+
+        const cartLayout =
+            document.querySelector(
+                ".cart-layout"
+            );
+
+
+        if (cartLayout) {
+
+            cartLayout.remove();
+
+        }
+
+
+        if (!document.getElementById("empty-cart")) {
+
+            const emptyCart =
+                document.createElement("div");
+
+            emptyCart.id = "empty-cart";
+
+            emptyCart.className =
+                "empty-cart";
+
+
+            emptyCart.innerHTML = `
+
+                <div class="empty-cart-icon">
+                    🛒
+                </div>
+
+                <h2>
+                    Your cart is empty.
+                </h2>
+
+                <p>
+                    Looks like you haven't added anything yet.
+                </p>
+
+                <a
+                    href="{% url 'menu' %}"
+                    class="hero-button primary-button"
+                >
+                    Explore Menu
+                </a>
+
+            `;
+
+
+            const container =
+                document.querySelector(
+                    ".page-container"
+                );
+
+            container.appendChild(emptyCart);
+
+        }
+
+    }
+
+
+
+    /* =========================
+       QUANTITY BUTTONS
+    ========================== */
+
+    const quantityForms =
+        document.querySelectorAll(
+            ".quantity-form"
+        );
+
+
+    quantityForms.forEach(function(form) {
+
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const button =
+                    form.querySelector(
+                        ".quantity-button"
+                    );
+
+
+                button.disabled = true;
+
+
+                fetch(
+                    form.action,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest",
+
+                            "X-CSRFToken":
+                                getCSRFToken(form)
+                        }
+                    }
+                )
+
+
+                .then(function(response) {
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    if (data.success) {
+
+
+                        const card =
+                            form.closest(
+                                ".cart-item-card"
+                            );
+
+
+                        const quantity =
+                            card.querySelector(
+                                ".item-quantity"
+                            );
+
+
+                        const subtotal =
+                            card.querySelector(
+                                ".cart-item-subtotal strong"
+                            );
+
+
+                        quantity.textContent =
+                            data.quantity;
+
+
+                        subtotal.textContent =
+                            "₹" +
+                            data.item_subtotal.toFixed(2);
+
+
+                        updateCartTotal(
+                            data.total
+                        );
+
+
+                    }
+
+                })
+
+
+                .catch(function(error) {
+
+                    console.error(
+                        "Cart update error:",
+                        error
+                    );
+
+                })
+
+
+                .finally(function() {
+
+                    button.disabled = false;
+
+                });
+
+
+            }
+        );
+
+
+    });
+
+
+
+    /* =========================
+       REMOVE ITEM
+    ========================== */
+
+    const removeForms =
+        document.querySelectorAll(
+            ".remove-form"
+        );
+
+
+    removeForms.forEach(function(form) {
+
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const button =
+                    form.querySelector(
+                        ".remove-button"
+                    );
+
+
+                button.disabled = true;
+
+
+                fetch(
+                    form.action,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest",
+
+                            "X-CSRFToken":
+                                getCSRFToken(form)
+                        }
+                    }
+                )
+
+
+                .then(function(response) {
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    if (data.success) {
+
+
+                        const card =
+                            form.closest(
+                                ".cart-item-card"
+                            );
+
+
+                        card.remove();
+
+
+                        updateCartTotal(
+                            data.total
+                        );
+
+
+                        updateItemCount();
+
+
+                        const remainingItems =
+                            document.querySelectorAll(
+                                ".cart-item-card"
+                            );
+
+
+                        if (
+                            remainingItems.length === 0
+                        ) {
+
+                            showEmptyCart();
+
+                        }
+
+
+                    }
+
+                })
+
+
+                .catch(function(error) {
+
+                    console.error(
+                        "Remove item error:",
+                        error
+                    );
+
+
+                    button.disabled = false;
+
+                });
+
+
+            }
+        );
+
+
+    });
+
+
+
+    /* =========================
+       CLEAR CART
+    ========================== */
+
+    const clearCartForm =
+        document.getElementById(
+            "clear-cart-form"
+        );
+
+
+    if (clearCartForm) {
+
+
+        clearCartForm.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const button =
+                    clearCartForm.querySelector(
+                        ".clear-cart-button"
+                    );
+
+
+                button.disabled = true;
+
+
+                fetch(
+                    clearCartForm.action,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest",
+
+                            "X-CSRFToken":
+                                getCSRFToken(
+                                    clearCartForm
+                                )
+                        }
+                    }
+                )
+
+
+                .then(function(response) {
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    if (data.success) {
+
+                        showEmptyCart();
+
+                    }
+
+                })
+
+
+                .catch(function(error) {
+
+                    console.error(
+                        "Clear cart error:",
+                        error
+                    );
+
+
+                    button.disabled = false;
+
+                });
+
+
+            }
+        );
+
+    }
+
+
+</script>
+
+
+{% endblock %}

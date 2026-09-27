@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book a Table - Local:Byte</title>
+
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+</head>
+
+<body>
+
+    <div class="booking-container">
+
+        <div class="booking-card">
+
+            <div class="booking-header">
+                <h1>Book Your Table</h1>
+                <p>Reserve your table at Local:Byte</p>
+            </div>
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="form-group">
+
+                        <label>Date</label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            min="{{ today }}"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Time</label>
+
+                        <input
+                            type="time"
+                            name="time"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Number of Guests</label>
+
+                        <input
+                            type="number"
+                            name="guests"
+                            min="1"
+                        >
+
+                    </div>
+
+                    <button type="submit" class="booking-button">
+                        Find Available Tables
+                    </button>
+
+                </form>
+                {% if available_tables %}
+
+                        <h2>Available Tables</h2>
+
+                        {% for table in available_tables %}
+
+                            <div>
+                                <h3>Table {{ table.table_number }}</h3>
+
+                                <p>
+                                    Capacity: {{ table.capacity }} Guests
+                                </p>
+
+                                <form method="post">
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="action"
+                                        value="select_table"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="table_id"
+                                        value="{{ table.id }}"
+                                    >
+                                    <input
+                                        type="hidden"
+                                        name="date"
+                                        value="{{ request.POST.date }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="time"
+                                        value="{{ request.POST.time }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="guests"
+                                        value="{{ request.POST.guests }}"
+                                    >
+
+                                    <button type="submit">
+                                        Select Table
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+

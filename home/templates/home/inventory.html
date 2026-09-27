@@ -1,0 +1,471 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+Local:Byte | Inventory
+{% endblock %}
+
+{% block content %}
+
+<section class="inventory-page">
+
+
+<!-- HEADER -->
+<div class="inventory-hero">
+    <div class="inventory-container">
+
+        <div>
+            <p class="inventory-label">MANAGER OPERATIONS</p>
+            <h1>Inventory</h1>
+            <p class="inventory-subtitle">
+                Monitor stock levels, add inventory,
+                and issue stock to the kitchen.
+            </p>
+        </div>
+
+        <div class="inventory-navigation">
+            <a href="{% url 'manager_dashboard' %}">
+                ← Dashboard
+            </a>
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- MAIN -->
+<div class="inventory-container inventory-main">
+
+    <!-- LOW STOCK -->
+    <section class="inventory-section">
+
+        <div class="inventory-section-header">
+            <div>
+                <p class="inventory-label">ATTENTION REQUIRED</p>
+                <h2>Low Stock Alert</h2>
+            </div>
+
+            <span class="inventory-count">
+                {{ low_stock_items|length }} items
+            </span>
+        </div>
+
+
+        {% if low_stock_items %}
+
+            <div class="inventory-alert-grid">
+
+                {% for item in low_stock_items %}
+
+                    <div class="inventory-alert-card">
+
+                        <div class="inventory-card-top">
+
+                            <div class="inventory-icon warning">
+                                !
+                            </div>
+
+                            <span class="inventory-status warning">
+                                {{ item.stock_status }}
+                            </span>
+
+                        </div>
+
+                        <h3>{{ item.name }}</h3>
+
+                        <div class="inventory-quantity">
+
+                            <strong>
+                                {{ item.quantity }}
+                            </strong>
+
+                            <span>
+                                {{ item.unit }}
+                            </span>
+
+                        </div>
+
+                        <div class="inventory-minimum">
+
+                            <span>Minimum stock</span>
+
+                            <strong>
+                                {{ item.minimum_stock }}
+                                {{ item.unit }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="inventory-empty success-empty">
+
+                <div class="inventory-empty-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <h3>All stock levels are healthy</h3>
+                    <p>
+                        No inventory items are currently below
+                        their minimum stock level.
+                    </p>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ALL INVENTORY -->
+    <section class="inventory-section">
+
+        <div class="inventory-section-header">
+
+            <div>
+                <p class="inventory-label">STOCK OVERVIEW</p>
+                <h2>All Inventory</h2>
+            </div>
+
+            <span class="inventory-count">
+                {{ inventory_items|length }} items
+            </span>
+
+        </div>
+
+
+        {% if inventory_items %}
+
+            <div class="inventory-table-wrapper">
+
+                <table class="inventory-table">
+
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Minimum</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in inventory_items %}
+
+                            <tr>
+
+                                <td>
+                                    <div class="inventory-item-name">
+                                        <div class="inventory-item-icon">
+                                            {{ item.name|first|upper }}
+                                        </div>
+
+                                        <span>
+                                            {{ item.name }}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {{ item.quantity }}
+                                    </strong>
+                                    {{ item.unit }}
+                                </td>
+
+                                <td>
+                                    {{ item.minimum_stock }}
+                                    {{ item.unit }}
+                                </td>
+
+                                <td>
+
+                                    {% if item.quantity == 0 %}
+
+                                        <span class="inventory-status danger">
+                                            Out of Stock
+                                        </span>
+
+                                    {% elif item.quantity <= item.minimum_stock %}
+
+                                        <span class="inventory-status warning">
+                                            Low Stock
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="inventory-status healthy">
+                                            Healthy
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="inventory-empty">
+
+                <div class="inventory-empty-icon">
+                    —
+                </div>
+
+                <div>
+                    <h3>No inventory items</h3>
+                    <p>
+                        There are currently no items in inventory.
+                    </p>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ACTIONS -->
+    <section class="inventory-actions-section">
+
+        <div class="inventory-section-header">
+
+            <div>
+                <p class="inventory-label">STOCK MANAGEMENT</p>
+                <h2>Manage Stock</h2>
+            </div>
+
+        </div>
+
+
+        <div class="inventory-action-grid">
+
+
+            <!-- ADD STOCK -->
+            <div class="inventory-action-card">
+
+                <div class="inventory-action-icon">
+                    +
+                </div>
+
+                <div class="inventory-action-heading">
+                    <h3>Add Stock</h3>
+                    <p>
+                        Record purchases, consumption,
+                        or inventory adjustments.
+                    </p>
+                </div>
+
+
+                <form
+                    method="post"
+                    action="{% url 'add_stock_transaction' %}"
+                    class="inventory-form"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="inventory-field">
+
+                        <label>
+                            Inventory Item
+                        </label>
+
+                        <select name="inventory_item" required>
+
+                            {% for item in inventory_items %}
+
+                                <option value="{{ item.id }}">
+                                    {{ item.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="inventory-field">
+
+                        <label>
+                            Transaction Type
+                        </label>
+
+                        <select name="transaction_type" required>
+
+                            <option value="purchase">
+                                Purchase
+                            </option>
+
+                            <option value="consumption">
+                                Consumption
+                            </option>
+
+                            <option value="adjustment">
+                                Adjustment
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="inventory-field">
+
+                        <label>
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="Enter quantity"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="inventory-primary-button"
+                    >
+                        Add Stock
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- ISSUE TO KITCHEN -->
+            <div class="inventory-action-card kitchen-action">
+
+                <div class="inventory-action-icon kitchen">
+                    →
+                </div>
+
+                <div class="inventory-action-heading">
+                    <h3>Issue To Kitchen</h3>
+                    <p>
+                        Move available stock from main inventory
+                        to kitchen stock.
+                    </p>
+                </div>
+
+
+                <form
+                    method="post"
+                    action="{% url 'issue_stock_to_kitchen' %}"
+                    class="inventory-form"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="inventory-field">
+
+                        <label>
+                            Inventory Item
+                        </label>
+
+                        <select name="inventory_item" required>
+
+                            {% for item in inventory_items %}
+
+                                <option value="{{ item.id }}">
+                                    {{ item.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="inventory-field">
+
+                        <label>
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="Enter quantity"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="inventory-kitchen-button"
+                    >
+                        Issue To Kitchen
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK LINKS -->
+    <section class="inventory-links">
+
+        <a href="{% url 'stock_transactions' %}">
+            <div>
+                <span>Stock Transactions</span>
+                <small>View inventory movement history</small>
+            </div>
+            <strong>→</strong>
+        </a>
+
+        <a href="{% url 'kitchen_stock' %}">
+            <div>
+                <span>Kitchen Stock</span>
+                <small>View stock currently issued to kitchen</small>
+            </div>
+            <strong>→</strong>
+        </a>
+
+    </section>
+
+</div>
+
+</section>
+
+{% endblock %}

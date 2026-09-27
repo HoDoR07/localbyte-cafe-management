@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Local:Byte</title>
+
+    <link rel="stylesheet"
+          href="{% static 'home/style.css' %}">
+</head>
+
+<body>
+
+<div class="manager-dashboard-page">
+
+    <div class="manager-container">
+
+        <section class="manager-section">
+
+            <div class="manager-section-header">
+
+                <p class="section-label">
+                    ACCOUNT
+                </p>
+
+                <h2>
+                    My Profile
+                </h2>
+
+                <p>
+                    Your Local:Byte account information.
+                </p>
+
+            </div>
+
+            <div class="manager-subsection">
+
+                <p>
+                    <strong>Username:</strong>
+                    {{ user.username }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ user.email }}
+                </p>
+
+                <br>
+
+                <a href="{% url 'home' %}"
+                   class="manager-confirm-button">
+                    ← Back to Home
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

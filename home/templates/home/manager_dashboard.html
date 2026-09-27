@@ -1,0 +1,1322 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manager Dashboard | Local:Byte</title>
+
+    <link rel="stylesheet"
+          href="{% static 'home/style.css' %}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .manager-page {
+            min-height: 100vh;
+            padding: 50px 6%;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .manager-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 45px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #242424;
+        }
+
+        .manager-title h1 {
+            margin: 0;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .manager-title h1 span {
+            color: #ff8a00;
+        }
+
+        .manager-title p {
+            margin: 10px 0 0;
+            color: #888;
+            font-size: 15px;
+        }
+
+        .manager-role {
+            padding: 10px 18px;
+            border: 1px solid rgba(255, 138, 0, 0.35);
+            border-radius: 30px;
+            color: #ff8a00;
+            background: rgba(255, 138, 0, 0.06);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .dashboard-section {
+            margin-bottom: 45px;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 750;
+        }
+
+        .section-heading p {
+            margin: 7px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            padding: 23px;
+            border: 1px solid #242424;
+            border-radius: 18px;
+            background: #0c0c0c;
+            transition: 0.25s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(255, 138, 0, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 138, 0, 0.08);
+        }
+
+        .stat-label {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .stat-value.orange {
+            color: #ff8a00;
+        }
+
+        /* =========================
+           CONTENT GRID
+        ========================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .dashboard-card {
+            background: #0b0b0b;
+            border: 1px solid #232323;
+            border-radius: 20px;
+            padding: 25px;
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            border-color: #333;
+        }
+
+        .dashboard-card h3 {
+            margin: 0 0 20px;
+            font-size: 20px;
+        }
+
+        /* =========================
+           ORDER / RESERVATION ROW
+        ========================= */
+
+        .item-row {
+            padding: 17px 0;
+            border-bottom: 1px solid #202020;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .item-subtitle {
+            margin-top: 5px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            color: #ffb347;
+            background: rgba(255, 179, 71, 0.1);
+            border: 1px solid rgba(255, 179, 71, 0.25);
+        }
+
+        .status-confirmed {
+            color: #66d9ff;
+            background: rgba(102, 217, 255, 0.08);
+            border: 1px solid rgba(102, 217, 255, 0.2);
+        }
+
+        .status-preparing {
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.08);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+
+        .status-ready {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .status-completed {
+            color: #777;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid #292929;
+        }
+
+        .status-cancelled {
+            color: #ff5c5c;
+            background: rgba(255, 92, 92, 0.08);
+            border: 1px solid rgba(255, 92, 92, 0.2);
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .manager-confirm-button,
+        .manager-action-button {
+            border: none;
+            background: #ff8a00;
+            color: #000;
+            padding: 9px 15px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .manager-confirm-button:hover,
+        .manager-action-button:hover {
+            background: #ffa733;
+            transform: translateY(-1px);
+        }
+
+        .manager-paid-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            color: #4ade80;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .manager-pending-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: rgba(255, 179, 71, 0.08);
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            color: #ffb347;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           ORDER ACTIONS
+        ========================= */
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 13px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================
+           INVENTORY
+        ========================= */
+
+        .inventory-status {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .inventory-in {
+            color: #4ade80;
+        }
+
+        .inventory-low {
+            color: #ffb347;
+        }
+
+        .inventory-out {
+            color: #ff5c5c;
+        }
+
+        /* =========================
+           QUICK ACCESS
+        ========================= */
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .quick-link {
+            display: block;
+            padding: 20px;
+            text-decoration: none;
+            color: #fff;
+            background: #0b0b0b;
+            border: 1px solid #242424;
+            border-radius: 16px;
+            transition: 0.25s ease;
+        }
+
+        .quick-link:hover {
+            border-color: #ff8a00;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 138, 0, 0.08);
+        }
+
+        .quick-link strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #ff8a00;
+        }
+
+        .quick-link span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty-state {
+            padding: 25px 0;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .manager-page {
+                padding: 35px 5%;
+            }
+
+            .manager-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .manager-title h1 {
+                font-size: 34px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-title h1 {
+                font-size: 29px;
+            }
+
+            .dashboard-card {
+                padding: 19px;
+            }
+
+            .item-main {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="manager-page">
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="manager-header">
+
+        <div class="manager-title">
+
+            <h1>
+                Manager <span>Dashboard</span>
+            </h1>
+
+            <p>
+                Monitor and manage Local:Byte operations.
+            </p>
+
+        </div>
+
+        <div class="manager-role">
+            Manager Access
+        </div>
+
+        <div class="manager-navigation">
+
+            <a href="{% url 'home' %}">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- =========================
+         ORDER OVERVIEW
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <h2>Order Overview</h2>
+
+            <p>
+                Current operational status of customer orders.
+            </p>
+
+        </div>
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Pending Orders
+                </div>
+
+                <div class="stat-value orange">
+                    {{ pending_orders }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Confirmed Orders
+                </div>
+
+                <div class="stat-value">
+                    {{ confirmed_orders }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Preparing
+                </div>
+
+                <div class="stat-value">
+                    {{ preparing_orders }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Ready
+                </div>
+
+                <div class="stat-value">
+                    {{ ready_orders }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Completed
+                </div>
+
+                <div class="stat-value">
+                    {{ completed_orders }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ORDERS
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="content-grid">
+
+            <!-- Pending Orders -->
+
+            <div class="dashboard-card">
+
+                <h3>
+                    Pending Orders
+                </h3>
+
+                {% for order in pending_order_list %}
+
+                    <div class="item-row">
+
+                        <div class="item-main">
+
+                            <div>
+
+                                <div class="item-title">
+                                    Order #{{ order.id }}
+                                </div>
+
+                                <div class="item-subtitle">
+                                    {{ order.customer.username }}
+                                    · ₹{{ order.total_amount }}
+                                </div>
+
+                            </div>
+
+                            <span class="status-badge status-pending">
+                                {{ order.status }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="item-actions">
+
+                            {% if order.payment_status == "paid" %}
+
+                                <span class="manager-paid-badge">
+                                    Payment Paid
+                                </span>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'confirm_order' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="manager-confirm-button"
+                                    >
+                                        Confirm Order
+                                    </button>
+
+                                </form>
+
+                            {% else %}
+
+                                <span class="manager-pending-badge">
+                                    Payment Pending
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        No pending orders.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Recent Orders -->
+
+            <div class="dashboard-card">
+
+                <h3>
+                    Recent Orders
+                </h3>
+
+                {% for order in recent_orders %}
+
+                    <div class="item-row">
+
+                        <div class="item-main">
+
+                            <div>
+
+                                <div class="item-title">
+                                    Order #{{ order.id }}
+                                </div>
+
+                                <div class="item-subtitle">
+                                    {{ order.customer.username }}
+                                    · ₹{{ order.total_amount }}
+                                </div>
+
+                            </div>
+
+                            {% if order.status == "pending" %}
+
+                                <span class="status-badge status-pending">
+                                    Pending
+                                </span>
+
+                            {% elif order.status == "confirmed" %}
+
+                                <span class="status-badge status-confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif order.status == "preparing" %}
+
+                                <span class="status-badge status-preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order.status == "ready" %}
+
+                                <span class="status-badge status-ready">
+                                    Ready
+                                </span>
+
+                            {% elif order.status == "completed" %}
+
+                                <span class="status-badge status-completed">
+                                    Completed
+                                </span>
+
+                            {% elif order.status == "cancelled" %}
+
+                                <span class="status-badge status-cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        No recent orders.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESERVATIONS
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <h2>
+                Reservations
+            </h2>
+
+            <p>
+                Manage customer table reservations.
+            </p>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Pending Reservations
+                </div>
+
+                <div class="stat-value orange">
+                    {{ pending_reservations }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Confirmed Reservations
+                </div>
+
+                <div class="stat-value">
+                    {{ confirmed_reservations }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="dashboard-section">
+
+        <div class="content-grid">
+
+            <!-- Pending Reservations -->
+
+            <div class="dashboard-card">
+
+                <h3>
+                    Pending Reservations
+                </h3>
+
+                {% for reservation in pending_reservation_list %}
+
+                    <div class="item-row">
+
+                        <div class="item-main">
+
+                            <div>
+
+                                <div class="item-title">
+                                    Table {{ reservation.table.table_number }}
+                                </div>
+
+                                <div class="item-subtitle">
+
+                                    {{ reservation.customer.username }}
+
+                                    ·
+
+                                    {{ reservation.reservation_date }}
+
+                                    ·
+
+                                    {{ reservation.reservation_time }}
+
+                                    ·
+
+                                    {{ reservation.number_of_guests }}
+                                    guests
+
+                                </div>
+
+                            </div>
+
+                            <span class="status-badge status-pending">
+                                Pending
+                            </span>
+
+                        </div>
+
+
+                        <div class="item-actions">
+
+                            {% if reservation.token_payment_status == "paid" %}
+
+                                <span class="manager-paid-badge">
+                                    Token Paid
+                                </span>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'confirm_reservation' reservation.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="manager-confirm-button"
+                                    >
+                                        Confirm Reservation
+                                    </button>
+
+                                </form>
+
+                            {% else %}
+
+                                <span class="manager-pending-badge">
+                                    Token Pending
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        No pending reservations.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Recent Reservations -->
+
+            <div class="dashboard-card">
+
+                <h3>
+                    Recent Reservations
+                </h3>
+
+                {% for reservation in recent_reservations %}
+
+                    <div class="item-row">
+
+                        <div class="item-main">
+
+                            <div>
+
+                                <div class="item-title">
+                                    Table {{ reservation.table.table_number }}
+                                </div>
+
+                                <div class="item-subtitle">
+
+                                    {{ reservation.customer.username }}
+
+                                    ·
+
+                                    {{ reservation.reservation_date }}
+
+                                    ·
+
+                                    {{ reservation.reservation_time }}
+
+                                </div>
+
+                            </div>
+
+
+                            {% if reservation.status == "pending" %}
+
+                                <span class="status-badge status-pending">
+                                    Pending
+                                </span>
+
+                            {% elif reservation.status == "confirmed" %}
+
+                                <span class="status-badge status-confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif reservation.status == "completed" %}
+
+                                <span class="status-badge status-completed">
+                                    Completed
+                                </span>
+
+                            {% elif reservation.status == "cancelled" %}
+
+                                <span class="status-badge status-cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        No reservations found.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         INVENTORY
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <h2>
+                Inventory
+            </h2>
+
+            <p>
+                Monitor stock levels and identify items requiring attention.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            {% for item in inventory_items %}
+
+                <div class="item-row">
+
+                    <div class="item-main">
+
+                        <div>
+
+                            <div class="item-title">
+                                {{ item.name }}
+                            </div>
+
+                            <div class="item-subtitle">
+
+                                Quantity:
+                                {{ item.quantity }}
+                                {{ item.unit }}
+
+                                · Minimum:
+                                {{ item.minimum_stock }}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if item.quantity == 0 %}
+
+                            <span class="inventory-status inventory-out">
+                                Out of Stock
+                            </span>
+
+                        {% elif item.quantity <= item.minimum_stock %}
+
+                            <span class="inventory-status inventory-low">
+                                Low Stock
+                            </span>
+
+                        {% else %}
+
+                            <span class="inventory-status inventory-in">
+                                In Stock
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    No inventory items available.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         PAYMENTS
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <h2>
+                Payments
+            </h2>
+
+            <p>
+                Monitor payment status and verify pending payments.
+            </p>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Total Payments
+                </div>
+
+                <div class="stat-value">
+                    {{ total_payments }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Paid
+                </div>
+
+                <div class="stat-value">
+                    {{ paid_payments }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Pending
+                </div>
+
+                <div class="stat-value orange">
+                    {{ pending_payments }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-card">
+
+            <h3>
+                Recent Payments
+            </h3>
+
+            {% for payment in recent_payments %}
+
+                <div class="item-row">
+
+                    <div class="item-main">
+
+                        <div>
+
+                            <div class="item-title">
+                                Order #{{ payment.order.id }}
+                            </div>
+
+                            <div class="item-subtitle">
+
+                                {{ payment.order.customer.username }}
+
+                                ·
+
+                                ₹{{ payment.amount }}
+
+                                ·
+
+                                {{ payment.payment_method|title }}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if payment.payment_status == "paid" %}
+
+                            <span class="manager-paid-badge">
+                                Paid
+                            </span>
+
+
+                        {% elif payment.payment_status == "pending" %}
+
+                            <form
+                                method="post"
+                                action="{% url 'manager_mark_payment_paid' payment.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="manager-confirm-button"
+                                >
+                                    Mark as Paid
+                                </button>
+
+                            </form>
+
+
+                        {% else %}
+
+                            <span class="manager-pending-badge">
+                                {{ payment.payment_status|title }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    No payments found.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CUSTOMERS
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-card">
+
+            <h3>
+                Customers
+            </h3>
+
+            <div class="item-main">
+
+                <div>
+
+                    <div class="item-title">
+                        Total Customers
+                    </div>
+
+                    <div class="item-subtitle">
+                        Registered customer accounts
+                    </div>
+
+                </div>
+
+                <div class="stat-value orange">
+                    {{ total_customers }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         QUICK ACCESS
+    ========================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <h2>
+                Quick Access
+            </h2>
+
+            <p>
+                Access operational management areas.
+            </p>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+            <a
+                href="{% url 'kitchen_orders' %}"
+                class="quick-link"
+            >
+                <strong>
+                    Kitchen Orders
+                </strong>
+
+                <span>
+                    Monitor active kitchen orders.
+                </span>
+            </a>
+
+
+            <a
+                href="{% url 'inventory' %}"
+                class="quick-link"
+            >
+                <strong>
+                    Inventory
+                </strong>
+
+                <span>
+                    Manage main inventory.
+                </span>
+            </a>
+
+
+            <a
+                href="{% url 'stock_transactions' %}"
+                class="quick-link"
+            >
+                <strong>
+                    Stock Transactions
+                </strong>
+
+                <span>
+                    View stock movement history.
+                </span>
+            </a>
+
+
+            <a
+                href="{% url 'kitchen_stock' %}"
+                class="quick-link"
+            >
+                <strong>
+                    Kitchen Stock
+                </strong>
+
+                <span>
+                    View stock currently issued to kitchen.
+                </span>
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+</body>
+</html>

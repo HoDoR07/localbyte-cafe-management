@@ -1,0 +1,251 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+Local:Byte | Contact
+{% endblock %}
+
+{% block content %}
+
+<section class="contact-page">
+
+<!-- HERO -->
+<div class="contact-hero">
+    <div class="contact-container">
+
+        <p class="contact-label">GET IN TOUCH</p>
+
+        <h1>
+            Let's talk.
+        </h1>
+
+        <p class="contact-hero-text">
+            Have a question, planning something special,
+            or simply want to say hello?
+            We'd love to hear from you.
+        </p>
+
+    </div>
+</div>
+
+
+<!-- CONTACT CONTENT -->
+<section class="contact-section">
+
+    <div class="contact-container">
+
+        <div class="contact-grid">
+
+            <!-- LEFT -->
+            <div class="contact-info">
+
+                <p class="contact-label">
+                    LOCAL:BYTE
+                </p>
+
+                <h2>
+                    We'd love to<br>
+                    hear from you.
+                </h2>
+
+                <p class="contact-description">
+                    Whether you're planning a celebration,
+                    have a question about our menu,
+                    or simply want to connect with us,
+                    drop us a message.
+                </p>
+
+
+                {% if cafe %}
+
+                    {% if cafe.phone %}
+                    <div class="contact-detail">
+
+                        <div class="contact-detail-icon">
+                            ☎
+                        </div>
+
+                        <div>
+                            <span>PHONE</span>
+                            <a href="tel:{{ cafe.phone }}">
+                                {{ cafe.phone }}
+                            </a>
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+
+                    {% if cafe.email %}
+                    <div class="contact-detail">
+
+                        <div class="contact-detail-icon">
+                            @
+                        </div>
+
+                        <div>
+                            <span>EMAIL</span>
+                            <a href="mailto:{{ cafe.email }}">
+                                {{ cafe.email }}
+                            </a>
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+
+                    {% if cafe.address %}
+                    <div class="contact-detail">
+
+                        <div class="contact-detail-icon">
+                            ⌖
+                        </div>
+
+                        <div>
+                            <span>LOCATION</span>
+                            <p>
+                                {{ cafe.address }}
+                            </p>
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+
+                    <div class="contact-detail">
+
+                        <div class="contact-detail-icon">
+                            ◷
+                        </div>
+
+                        <div>
+                            <span>OPENING HOURS</span>
+                            <p>
+                                {{ cafe.opening_time }}
+                                —
+                                {{ cafe.closing_time }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- RIGHT FORM -->
+            <div class="contact-form-card">
+
+                <div class="contact-form-header">
+
+                    <p class="contact-label">
+                        SEND A MESSAGE
+                    </p>
+
+                    <h2>
+                        Tell us what's on your mind.
+                    </h2>
+
+                </div>
+
+
+                <form method="post" class="contact-form">
+
+                    {% csrf_token %}
+
+                    {% for field in form %}
+
+                        <div class="contact-field">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.errors %}
+                                <div class="contact-error">
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+
+                    <button
+                        type="submit"
+                        class="contact-submit"
+                    >
+                        Send Message
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- BOTTOM CTA -->
+<section class="contact-cta">
+
+    <div class="contact-container">
+
+        <div class="contact-cta-card">
+
+            <div>
+
+                <p class="contact-label">
+                    SPECIAL OCCASIONS
+                </p>
+
+                <h2>
+                    Planning something special?
+                </h2>
+
+                <p>
+                    Birthdays, anniversaries, get-togethers,
+                    or just a memorable evening.
+                </p>
+
+            </div>
+
+
+            {% if cafe and cafe.phone %}
+
+                <a
+                    href="tel:{{ cafe.phone }}"
+                    class="contact-call-button"
+                >
+                    Call Us
+                    <span>↗</span>
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'home' %}"
+                    class="contact-call-button"
+                >
+                    Back Home
+                    <span>↗</span>
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+</section>
+
+{% endblock %}

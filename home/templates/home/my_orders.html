@@ -1,0 +1,228 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+Local:Byte | My Orders
+{% endblock %}
+
+{% block content %}
+
+<section class="orders-page">
+
+
+<div class="page-container">
+
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="orders-header">
+
+        <p class="section-label">
+            YOUR ORDERS
+        </p>
+
+        <h1>
+            My Orders
+        </h1>
+
+        <p>
+            View your previous orders, payment status,
+            and order progress.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         ORDERS
+    ========================== -->
+
+    <div class="orders-list">
+
+        {% for order in orders %}
+
+            <div class="order-card">
+
+
+                <!-- =========================
+                     ORDER HEADER
+                ========================== -->
+
+                <div class="order-card-header">
+
+                    <div>
+
+                        <p class="order-label">
+                            ORDER
+                        </p>
+
+                        <h2>
+                            #{{ order.id }}
+                        </h2>
+
+                    </div>
+
+
+                    <div class="order-date">
+
+                        <span>
+                            Ordered on
+                        </span>
+
+                        <strong>
+                            {{ order.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     ORDER DETAILS
+                ========================== -->
+
+                <div class="order-details">
+
+
+                    <div class="order-detail">
+
+                        <span>
+                            Total Amount
+                        </span>
+
+                        <strong class="order-amount">
+                            ₹{{ order.total_amount }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-detail">
+
+                        <span>
+                            Payment
+                        </span>
+
+                        {% if order.payment_status == "paid" %}
+
+                            <strong class="order-status-paid">
+                                Paid
+                            </strong>
+
+                        {% else %}
+
+                            <strong class="order-status-pending">
+                                {{ order.get_payment_status_display }}
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="order-detail">
+
+                        <span>
+                            Order Status
+                        </span>
+
+                        <strong>
+                            {{ order.get_status_display }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     ORDER ACTIONS
+                ========================== -->
+
+                <div class="order-actions">
+
+
+                    {% if order.status != "completed" and order.status != "cancelled" %}
+
+                        <a
+                            href="{% url 'order_tracking' order.id %}"
+                            class="order-action primary"
+                        >
+                            Track Order
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if order.payment_status == "paid" %}
+
+                        <a
+                            href="{% url 'order_invoice' order.id %}"
+                            class="order-action secondary"
+                        >
+                            View Invoice
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if order.payment_status != "paid" and order.status == "pending" %}
+
+                        <a
+                            href="{% url 'payment' order.id %}"
+                            class="order-action primary"
+                        >
+                            Complete Payment
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+
+            <!-- =========================
+                 EMPTY ORDERS
+            ========================== -->
+
+            <div class="orders-empty">
+
+                <div class="orders-empty-icon">
+                    🛍
+                </div>
+
+                <h2>
+                    No orders yet.
+                </h2>
+
+                <p>
+                    Your delicious Local:Byte orders
+                    will appear here.
+                </p>
+
+                <a
+                    href="{% url 'menu' %}"
+                    class="hero-button primary-button"
+                >
+                    Explore Menu
+                </a>
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends "home/base.html" %}
+
+
+{% block title %}
+    Local:Byte | Checkout
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================
+     CHECKOUT PAGE
+========================= -->
+
+<section class="checkout-page">
+
+    <div class="page-container">
+
+
+        <!-- =========================
+             CHECKOUT HEADER
+        ========================== -->
+
+        <div class="checkout-header">
+
+            <p class="section-label">
+                LOCAL:BYTE
+            </p>
+
+            <h1>
+                Checkout
+            </h1>
+
+            <p>
+                Review your order before continuing to payment.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             CHECKOUT LAYOUT
+        ========================== -->
+
+        <div class="checkout-layout">
+
+
+            <!-- =========================
+                 ORDER ITEMS
+            ========================== -->
+
+            <div class="checkout-order">
+
+                <div class="checkout-card">
+
+                    <p class="section-label">
+                        YOUR ORDER
+                    </p>
+
+                    <h2>
+                        Order Summary
+                    </h2>
+
+
+                    <div class="checkout-items">
+
+
+                        {% for item in cart_items %}
+
+
+                            <div class="checkout-item">
+
+
+                                <div class="checkout-item-info">
+
+                                    <h3>
+                                        {{ item.menu_item.name }}
+                                    </h3>
+
+                                    <p>
+                                        ₹{{ item.menu_item.price }}
+                                        ×
+                                        {{ item.quantity }}
+                                    </p>
+
+                                </div>
+
+
+                                <strong>
+                                    ₹{{ item.item_subtotal }}
+                                </strong>
+
+
+                            </div>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =========================
+                     CONTINUE SHOPPING
+                ========================== -->
+
+                <a
+                    href="{% url 'cart' %}"
+                    class="checkout-back"
+                >
+                    ← Back to Cart
+                </a>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 PRICE SUMMARY
+            ========================== -->
+
+            <aside class="checkout-summary">
+
+
+                <p class="section-label">
+                    PAYMENT SUMMARY
+                </p>
+
+
+                <h2>
+                    Total
+                </h2>
+
+
+                <!-- SUBTOTAL -->
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span>
+                        ₹{{ total }}
+                    </span>
+
+                </div>
+
+
+                <!-- GST -->
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        GST ({{ gst_rate }}%)
+                    </span>
+
+                    <span>
+                        ₹{{ gst }}
+                    </span>
+
+                </div>
+
+
+                <div class="checkout-divider"></div>
+
+
+                <!-- GRAND TOTAL -->
+
+                <div class="checkout-grand-total">
+
+                    <span>
+                        Grand Total
+                    </span>
+
+                    <strong>
+                        ₹{{ grand_total }}
+                    </strong>
+
+                </div>
+
+
+                <!-- =========================
+                     PAYMENT NOTE
+                ========================== -->
+
+                <div class="checkout-note">
+
+                    <span>
+                        🔒
+                    </span>
+
+                    <p>
+                        Your order will be created first.
+                        You will continue to payment on the next step.
+                    </p>
+
+                </div>
+
+
+                <!-- =========================
+                     CHECKOUT FORM
+                ========================== -->
+
+                <form
+                    method="post"
+                    action="{% url 'checkout' %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="checkout-pay-button"
+                    >
+                        Continue to Payment
+                    </button>
+
+
+                </form>
+
+
+            </aside>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

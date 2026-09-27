@@ -1,0 +1,543 @@
+{% extends "home/base.html" %}
+
+
+{% block title %}
+    Local:Byte | Secure Payment
+{% endblock %}
+
+
+{% block content %}
+
+<section class="payment-page">
+
+    <div class="payment-shell">
+
+
+        <!-- =========================
+             TOP
+        ========================== -->
+
+        <header class="payment-header">
+
+            <a
+                href="{% url 'checkout' %}"
+                class="payment-back"
+            >
+                ← Checkout
+            </a>
+
+            <div class="payment-brand">
+                Local<span>:Byte</span>
+            </div>
+
+            <div class="payment-secure">
+                <span>🔒</span>
+                Secure payment
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             PROGRESS
+        ========================== -->
+
+        <div class="checkout-progress">
+
+            <div class="progress-step completed">
+                <span>1</span>
+                <p>Cart</p>
+            </div>
+
+            <div class="progress-line completed"></div>
+
+            <div class="progress-step completed">
+                <span>2</span>
+                <p>Checkout</p>
+            </div>
+
+            <div class="progress-line active"></div>
+
+            <div class="progress-step active">
+                <span>3</span>
+                <p>Payment</p>
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             MAIN
+        ========================== -->
+
+        <div class="payment-main">
+
+
+            <!-- =========================
+                 PAYMENT AREA
+            ========================== -->
+
+            <main class="payment-content">
+
+                <div class="payment-title">
+
+                    <p class="section-label">
+                        PAYMENT
+                    </p>
+
+                    <h1>
+                        Choose how you'd like to pay.
+                    </h1>
+
+                </div>
+
+
+
+                <!-- =========================
+                     METHOD TABS
+                ========================== -->
+
+                <div class="payment-tabs">
+
+
+                    <button
+                        type="button"
+                        class="payment-tab active"
+                        data-method="upi"
+                    >
+                        <span>UPI</span>
+                        <small>Instant</small>
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="payment-tab"
+                        data-method="card"
+                    >
+                        <span>Card</span>
+                        <small>Credit / Debit</small>
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="payment-tab"
+                        data-method="cash"
+                    >
+                        <span>Cash</span>
+                        <small>At cafe</small>
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- =========================
+                     PAYMENT FORM
+                ========================== -->
+
+                <div class="payment-form-area">
+
+
+                    <!-- =========================
+                         UPI
+                    ========================== -->
+
+                    <div
+                        class="payment-panel active"
+                        data-panel="upi"
+                    >
+
+                        <h2>
+                            Pay with UPI
+                        </h2>
+
+                        <p>
+                            Enter your UPI ID to continue.
+                        </p>
+
+
+                        <div class="payment-field">
+
+                            <label for="upi_id">
+                                UPI ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="upi_id"
+                                placeholder="example@upi"
+                            >
+
+                        </div>
+
+
+                        <div class="payment-info">
+
+                            UPI payment is currently simulated
+                            for this project.
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         CARD
+                    ========================== -->
+
+                    <div
+                        class="payment-panel"
+                        data-panel="card"
+                    >
+
+                        <h2>
+                            Card payment
+                        </h2>
+
+                        <p>
+                            Enter your card details to continue.
+                        </p>
+
+
+                        <div class="payment-field">
+
+                            <label for="card_number">
+                                Card number
+                            </label>
+
+                            <input
+                                type="text"
+                                id="card_number"
+                                placeholder="1234 5678 9012 3456"
+                                maxlength="19"
+                            >
+
+                        </div>
+
+
+                        <div class="payment-field-grid">
+
+                            <div class="payment-field">
+
+                                <label for="expiry">
+                                    Expiry date
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="expiry"
+                                    placeholder="MM / YY"
+                                    maxlength="5"
+                                >
+
+                            </div>
+
+
+                            <div class="payment-field">
+
+                                <label for="cvv">
+                                    CVV
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="cvv"
+                                    placeholder="•••"
+                                    maxlength="3"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="payment-info">
+
+                            Card payment is currently simulated
+                            for this project.
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         CASH
+                    ========================== -->
+
+                    <div
+                        class="payment-panel"
+                        data-panel="cash"
+                    >
+
+                        <h2>
+                            Pay at the cafe
+                        </h2>
+
+                        <p>
+                            Complete your payment at the
+                            Local:Byte counter.
+                        </p>
+
+
+                        <div class="cash-payment">
+
+                            <span>
+                                Amount due
+                            </span>
+
+                            <strong>
+                                ₹{{ order.total_amount }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         ACTUAL DJANGO FORM
+                    ========================== -->
+
+                    <form
+                        method="post"
+                        action="{% url 'payment' order.id %}"
+                        id="payment-form"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <input
+                            type="hidden"
+                            name="payment_method"
+                            id="payment-method"
+                            value="upi"
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="pay-button"
+                        >
+
+                            <span>
+                                Pay securely
+                            </span>
+
+                            <strong>
+                                ₹{{ order.total_amount }}
+                            </strong>
+
+                        </button>
+
+
+                    </form>
+
+
+                    <p class="payment-disclaimer">
+                        By continuing, you confirm your order and payment method.
+                    </p>
+
+
+                </div>
+
+            </main>
+
+
+
+            <!-- =========================
+                 ORDER SUMMARY
+            ========================== -->
+
+            <aside class="payment-summary">
+
+
+                <div class="summary-top">
+
+                    <span>
+                        ORDER
+                    </span>
+
+                    <strong>
+                        #{{ order.id }}
+                    </strong>
+
+                </div>
+
+
+                <h2>
+                    Order summary
+                </h2>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <strong>
+                        ₹{{ order.subtotal }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        GST ({{ order.gst_rate }}%)
+                    </span>
+
+                    <strong>
+                        ₹{{ order.gst_amount }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        ₹{{ order.total_amount }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-security">
+
+                    <span>
+                        🔒
+                    </span>
+
+                    <p>
+                        Your payment details are not stored
+                        by Local:Byte.
+                    </p>
+
+                </div>
+
+
+            </aside>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     PAYMENT JAVASCRIPT
+========================= -->
+
+<script>
+
+    const tabs =
+        document.querySelectorAll(
+            ".payment-tab"
+        );
+
+
+    const panels =
+        document.querySelectorAll(
+            ".payment-panel"
+        );
+
+
+    const paymentMethod =
+        document.getElementById(
+            "payment-method"
+        );
+
+
+    function changePaymentMethod(method) {
+
+
+        tabs.forEach(function(tab) {
+
+            tab.classList.remove("active");
+
+        });
+
+
+        panels.forEach(function(panel) {
+
+            panel.classList.remove("active");
+
+        });
+
+
+        const selectedTab =
+            document.querySelector(
+                `.payment-tab[data-method="${method}"]`
+            );
+
+
+        const selectedPanel =
+            document.querySelector(
+                `.payment-panel[data-panel="${method}"]`
+            );
+
+
+        if (selectedTab) {
+
+            selectedTab.classList.add("active");
+
+        }
+
+
+        if (selectedPanel) {
+
+            selectedPanel.classList.add("active");
+
+        }
+
+
+        paymentMethod.value = method;
+
+    }
+
+
+    tabs.forEach(function(tab) {
+
+        tab.addEventListener(
+            "click",
+            function() {
+
+                changePaymentMethod(
+                    tab.dataset.method
+                );
+
+            }
+        );
+
+    });
+
+
+    changePaymentMethod("upi");
+
+</script>
+
+
+{% endblock %}

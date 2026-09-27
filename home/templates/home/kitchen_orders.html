@@ -1,0 +1,274 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Kitchen Orders
+{% endblock %}
+
+{% block content %}
+
+<section class="kitchen-orders-page">
+
+    <!-- HEADER -->
+    <div class="kitchen-orders-hero">
+
+        <div class="kitchen-orders-container">
+
+            <div>
+                <p class="kitchen-label">KITCHEN OPERATIONS</p>
+
+                <h1>Kitchen Orders</h1>
+
+                <p class="kitchen-subtitle">
+                    Monitor active orders and move them through
+                    the kitchen workflow.
+                </p>
+            </div>
+
+            <div class="kitchen-navigation">
+
+                <a href="{% url 'manager_dashboard' %}">
+                    ← Dashboard
+                </a>
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDERS -->
+    <main class="kitchen-orders-container kitchen-orders-main">
+
+        <div class="kitchen-section-header">
+
+            <div>
+                <p class="kitchen-label">ACTIVE QUEUE</p>
+                <h2>Orders in Kitchen</h2>
+            </div>
+
+            <span class="kitchen-order-count">
+                {{ orders|length }} Active
+            </span>
+
+        </div>
+
+
+        {% if orders %}
+
+            <div class="kitchen-order-grid">
+
+                {% for order in orders %}
+
+                    <article class="kitchen-order-card">
+
+                        <!-- CARD HEADER -->
+                        <div class="kitchen-order-card-header">
+
+                            <div>
+
+                                <span class="kitchen-order-label">
+                                    ORDER
+                                </span>
+
+                                <h3>
+                                    #{{ order.id }}
+                                </h3>
+
+                            </div>
+
+
+                            {% if order.status == "confirmed" %}
+
+                                <span class="kitchen-status confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif order.status == "preparing" %}
+
+                                <span class="kitchen-status preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order.status == "ready" %}
+
+                                <span class="kitchen-status ready">
+                                    Ready
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- ORDER INFO -->
+                        <div class="kitchen-order-info">
+
+                            <div>
+
+                                <span>ORDER TIME</span>
+
+                                <strong>
+                                    {{ order.created_at|date:"d M Y, H:i" }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>ITEMS</span>
+
+                                <strong>
+                                    {{ order.items.all|length }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ITEMS -->
+                        <div class="kitchen-items">
+
+                            <div class="kitchen-items-heading">
+                                <span>ORDER ITEMS</span>
+                            </div>
+
+
+                            {% for item in order.items.all %}
+
+                                <div class="kitchen-item">
+
+                                    <div class="kitchen-item-number">
+                                        {{ forloop.counter }}
+                                    </div>
+
+                                    <div class="kitchen-item-details">
+
+                                        <strong>
+                                            {{ item.menu_item.name }}
+                                        </strong>
+
+                                    </div>
+
+                                    <div class="kitchen-item-quantity">
+                                        × {{ item.quantity }}
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- ACTION -->
+                        <div class="kitchen-order-action">
+
+                            {% if order.status == "confirmed" %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'start_preparing' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="kitchen-action-button primary"
+                                    >
+                                        Start Preparing
+                                        <span>→</span>
+                                    </button>
+
+                                </form>
+
+
+                            {% elif order.status == "preparing" %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'mark_ready' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="kitchen-action-button primary"
+                                    >
+                                        Mark Ready
+                                        <span>✓</span>
+                                    </button>
+
+                                </form>
+
+
+                            {% elif order.status == "ready" %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'complete_order' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="kitchen-action-button complete"
+                                    >
+                                        Complete Order
+                                        <span>✓</span>
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="kitchen-empty">
+
+                <div class="kitchen-empty-icon">
+                    ✓
+                </div>
+
+                <h2>
+                    Kitchen is clear
+                </h2>
+
+                <p>
+                    There are no active orders waiting
+                    in the kitchen right now.
+                </p>
+
+                <a href="{% url 'manager_dashboard' %}">
+                    Back to Dashboard →
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</section>
+
+{% endblock %}

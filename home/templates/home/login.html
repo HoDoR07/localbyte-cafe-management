@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - Local:Byte</title>
+
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Login to continue to Local:Byte</p>
+            </div>
+
+            {% if form.non_field_errors %}
+
+                {% for error in form.non_field_errors %}
+
+                    <p>{{ error }}</p>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="auth-button">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account?
+                <a href="{% url 'register' %}">Create Account</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+

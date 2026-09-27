@@ -1,0 +1,1511 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<section class="admin-dashboard-page">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <header class="admin-dashboard-hero">
+
+        <div class="admin-dashboard-container">
+
+            <div>
+
+                <p class="admin-dashboard-label">
+                    LOCAL:BYTE ADMINISTRATION
+                </p>
+
+                <h1>
+                    Admin<br>
+                    Dashboard
+                </h1>
+
+                <p class="admin-dashboard-subtitle">
+                    Monitor business performance, operations,
+                    revenue, payments, customers and inventory.
+                </p>
+
+            </div>
+
+
+            <div class="admin-dashboard-navigation">
+
+                <a href="{% url 'home' %}">
+                    ← Home
+                </a>
+
+                <a href="{% url 'manager_dashboard' %}">
+                    Manager Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-dashboard-container admin-dashboard-main">
+
+
+        <!-- =================================================
+             ORDERS OVERVIEW
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        OPERATIONS
+                    </p>
+
+                    <h2>
+                        Orders Overview
+                    </h2>
+
+                </div>
+
+                <span class="admin-section-count">
+                    {{ total_orders }} Total Orders
+                </span>
+
+            </div>
+
+
+            <div class="admin-stat-grid">
+
+                <div class="admin-stat-card">
+
+                    <span>Total Orders</span>
+
+                    <strong>
+                        {{ total_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <span>Pending</span>
+
+                    <strong>
+                        {{ pending_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card confirmed">
+
+                    <span>Confirmed</span>
+
+                    <strong>
+                        {{ confirmed_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card preparing">
+
+                    <span>Preparing</span>
+
+                    <strong>
+                        {{ preparing_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card ready">
+
+                    <span>Ready</span>
+
+                    <strong>
+                        {{ ready_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card completed">
+
+                    <span>Completed</span>
+
+                    <strong>
+                        {{ completed_orders }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card cancelled">
+
+                    <span>Cancelled</span>
+
+                    <strong>
+                        {{ cancelled_orders }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            ORDER ANALYTICS
+                        </span>
+
+                        <h3>
+                            Order Status Distribution
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="admin-chart-wrapper">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RESERVATIONS
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        TABLE MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Reservations
+                    </h2>
+
+                </div>
+
+                <span class="admin-section-count">
+                    {{ total_reservations }} Total
+                </span>
+
+            </div>
+
+
+            <div class="admin-stat-grid admin-stat-grid-four">
+
+                <div class="admin-stat-card">
+
+                    <span>Total Reservations</span>
+
+                    <strong>
+                        {{ total_reservations }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <span>Pending</span>
+
+                    <strong>
+                        {{ pending_reservations }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card confirmed">
+
+                    <span>Confirmed</span>
+
+                    <strong>
+                        {{ confirmed_reservations }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card cancelled">
+
+                    <span>Cancelled</span>
+
+                    <strong>
+                        {{ cancelled_reservations }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card completed">
+
+                    <span>Completed</span>
+
+                    <strong>
+                        {{ completed_reservations }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            RESERVATION ANALYTICS
+                        </span>
+
+                        <h3>
+                            Reservation Status
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="admin-chart-wrapper admin-doughnut-wrapper">
+                    <canvas id="reservationChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CUSTOMERS
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        CUSTOMER INSIGHTS
+                    </p>
+
+                    <h2>
+                        Customers
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-grid admin-stat-grid-three">
+
+                <div class="admin-stat-card">
+
+                    <span>Total Customers</span>
+
+                    <strong>
+                        {{ total_customers }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card confirmed">
+
+                    <span>Active Customers</span>
+
+                    <strong>
+                        {{ active_customers }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card preparing">
+
+                    <span>Customers With Orders</span>
+
+                    <strong>
+                        {{ customers_with_orders }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REVENUE
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        FINANCIAL PERFORMANCE
+                    </p>
+
+                    <h2>
+                        Revenue
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL REVENUE -->
+
+            <div class="admin-revenue-card">
+
+                <div>
+
+                    <span>
+                        TOTAL REVENUE
+                    </span>
+
+                    <strong>
+                        ₹{{ total_revenue }}
+                    </strong>
+
+                    <p>
+                        Revenue generated from completed payments.
+                    </p>
+
+                </div>
+
+                <div class="admin-revenue-icon">
+                    ₹
+                </div>
+
+            </div>
+
+
+            <!-- DAILY REVENUE -->
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            DAILY REVENUE
+                        </span>
+
+                        <h3>
+                            Revenue by Day
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-revenue-list">
+
+                    {% for day in revenue_by_day %}
+
+                        <div class="admin-revenue-row">
+
+                            <span>
+                                {{ day.day }}
+                            </span>
+
+                            <strong>
+                                ₹{{ day.revenue }}
+                            </strong>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="admin-empty-small">
+                            No daily revenue found.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="admin-chart-wrapper">
+
+                    <canvas id="revenueDayChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- MONTHLY REVENUE -->
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            MONTHLY REVENUE
+                        </span>
+
+                        <h3>
+                            Revenue Trend
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-revenue-list">
+
+                    {% for month in revenue_by_month %}
+
+                        <div class="admin-revenue-row">
+
+                            <span>
+                                {{ month.month }}
+                            </span>
+
+                            <strong>
+                                ₹{{ month.revenue }}
+                            </strong>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="admin-empty-small">
+                            No monthly revenue found.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="admin-chart-wrapper">
+
+                    <canvas id="revenueMonthChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PAYMENTS
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        PAYMENT MONITORING
+                    </p>
+
+                    <h2>
+                        Payments
+                    </h2>
+
+                </div>
+
+                <span class="admin-section-count">
+                    {{ total_payments }} Total
+                </span>
+
+            </div>
+
+
+            <div class="admin-stat-grid">
+
+                <div class="admin-stat-card">
+
+                    <span>Total Payments</span>
+
+                    <strong>
+                        {{ total_payments }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card completed">
+
+                    <span>Paid</span>
+
+                    <strong>
+                        {{ paid_payments }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <span>Pending</span>
+
+                    <strong>
+                        {{ pending_payments }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card cancelled">
+
+                    <span>Failed</span>
+
+                    <strong>
+                        {{ failed_payments }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            PAYMENT ANALYTICS
+                        </span>
+
+                        <h3>
+                            Payment Status
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="admin-chart-wrapper admin-doughnut-wrapper">
+                    <canvas id="paymentChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TOP SELLING
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        MENU PERFORMANCE
+                    </p>
+
+                    <h2>
+                        Top-Selling Items
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-chart-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            SALES ANALYTICS
+                        </span>
+
+                        <h3>
+                            Best Performing Menu Items
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                {% if top_selling_items %}
+
+                    <div class="admin-top-selling-list">
+
+                        {% for item in top_selling_items %}
+
+                            <div class="admin-top-selling-row">
+
+                                <div class="admin-ranking">
+                                    {{ forloop.counter }}
+                                </div>
+
+                                <div class="admin-top-selling-name">
+
+                                    <strong>
+                                        {{ item.menu_item__name }}
+                                    </strong>
+
+                                    <span>
+                                        Menu Item
+                                    </span>
+
+                                </div>
+
+                                <div class="admin-top-selling-quantity">
+
+                                    <span>
+                                        SOLD
+                                    </span>
+
+                                    <strong>
+                                        {{ item.total_quantity }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="admin-empty-state">
+                        No sales data found.
+                    </div>
+
+                {% endif %}
+
+
+                <div class="admin-chart-wrapper">
+
+                    <canvas id="topSellingChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             INVENTORY
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        STOCK MONITORING
+                    </p>
+
+                    <h2>
+                        Inventory
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-grid admin-stat-grid-three">
+
+                <div class="admin-stat-card">
+
+                    <span>Total Inventory Items</span>
+
+                    <strong>
+                        {{ total_inventory_items }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <span>Low Stock Items</span>
+
+                    <strong>
+                        {{ low_stock_count }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-stat-card cancelled">
+
+                    <span>Out of Stock</span>
+
+                    <strong>
+                        {{ out_of_stock_items }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-inventory-card">
+
+                <div class="admin-chart-header">
+
+                    <div>
+
+                        <span>
+                            STOCK ALERTS
+                        </span>
+
+                        <h3>
+                            Low Stock Items
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                {% for item in low_stock_items %}
+
+                    <div class="admin-inventory-row">
+
+                        <div>
+
+                            <strong>
+                                {{ item.name }}
+                            </strong>
+
+                            <span>
+                                Minimum:
+                                {{ item.minimum_stock }}
+                                {{ item.unit }}
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                CURRENT
+                            </span>
+
+                            <strong>
+                                {{ item.quantity }}
+                                {{ item.unit }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="admin-empty-state">
+
+                        <div class="admin-empty-icon">
+                            ✓
+                        </div>
+
+                        <strong>
+                            Inventory looks healthy
+                        </strong>
+
+                        <p>
+                            No low stock items found.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RECENT ACTIVITY
+        ================================================== -->
+
+        <section class="admin-section">
+
+            <div class="admin-section-header">
+
+                <div>
+
+                    <p class="admin-section-label">
+                        RECENT ACTIVITY
+                    </p>
+
+                    <h2>
+                        Latest Operations
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ORDERS -->
+
+            <div class="admin-activity-card">
+
+                <div class="admin-activity-header">
+
+                    <div>
+
+                        <span>
+                            ORDERS
+                        </span>
+
+                        <h3>
+                            Recent Orders
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                {% for order in recent_orders %}
+
+                    <div class="admin-activity-row">
+
+                        <div class="admin-activity-primary">
+
+                            <strong>
+                                Order #{{ order.id }}
+                            </strong>
+
+                            <span>
+                                {{ order.customer.username }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-activity-amount">
+                            ₹{{ order.total_amount }}
+                        </div>
+
+
+                        <div>
+
+                            <span class="admin-status
+                                admin-status-{{ order.status }}">
+                                {{ order.status|title }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-activity-payment">
+                            {{ order.payment_status|title }}
+                        </div>
+
+
+                        <div class="admin-activity-date">
+                            {{ order.created_at|date:"d M Y, H:i" }}
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="admin-empty-state">
+                        No orders found.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- RECENT RESERVATIONS -->
+
+            <div class="admin-activity-card">
+
+                <div class="admin-activity-header">
+
+                    <div>
+
+                        <span>
+                            RESERVATIONS
+                        </span>
+
+                        <h3>
+                            Recent Reservations
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                {% for reservation in recent_reservations %}
+
+                    <div class="admin-activity-row reservation-row">
+
+                        <div class="admin-activity-primary">
+
+                            <strong>
+                                Reservation #{{ reservation.id }}
+                            </strong>
+
+                            <span>
+                                {{ reservation.customer.username }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-activity-table">
+
+                            Table
+                            {{ reservation.table.table_number }}
+
+                        </div>
+
+
+                        <div class="admin-reservation-date">
+
+                            <strong>
+                                {{ reservation.reservation_date }}
+                            </strong>
+
+                            <span>
+                                {{ reservation.reservation_time }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-guest-count">
+
+                            {{ reservation.number_of_guests }}
+                            Guests
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="admin-status
+                                admin-status-{{ reservation.status }}">
+                                {{ reservation.status|title }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="admin-empty-state">
+                        No reservations found.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- RECENT PAYMENTS -->
+
+            <div class="admin-activity-card">
+
+                <div class="admin-activity-header">
+
+                    <div>
+
+                        <span>
+                            PAYMENTS
+                        </span>
+
+                        <h3>
+                            Recent Payments
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                {% for payment in recent_payments %}
+
+                    <div class="admin-activity-row payment-row">
+
+                        <div class="admin-activity-primary">
+
+                            <strong>
+                                Payment #{{ payment.id }}
+                            </strong>
+
+                            <span>
+                                Order #{{ payment.order.id }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-activity-amount">
+                            ₹{{ payment.amount }}
+                        </div>
+
+
+                        <div class="admin-payment-method">
+
+                            {{ payment.payment_method|upper }}
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="admin-status
+                                admin-status-{{ payment.payment_status }}">
+                                {{ payment.payment_status|title }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-activity-date">
+                            {{ payment.created_at|date:"d M Y, H:i" }}
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="admin-empty-state">
+                        No payments found.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</section>
+
+
+<!-- =========================================================
+     CHARTS
+========================================================== -->
+
+<script>
+
+    const chartFont = {
+        family: "Arial"
+    };
+
+    const chartOptions = {
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#888888",
+                    font: chartFont
+                }
+            }
+        },
+
+        scales: {
+            x: {
+                ticks: {
+                    color: "#666666"
+                },
+
+                grid: {
+                    color: "#171717"
+                }
+            },
+
+            y: {
+                beginAtZero: true,
+
+                ticks: {
+                    color: "#666666"
+                },
+
+                grid: {
+                    color: "#171717"
+                }
+            }
+        }
+    };
+
+
+    /* =========================
+       ORDERS
+    ========================= */
+
+    new Chart(
+        document.getElementById("ordersChart"),
+        {
+            type: "bar",
+
+            data: {
+
+                labels: [
+                    "Pending",
+                    "Confirmed",
+                    "Preparing",
+                    "Ready",
+                    "Completed",
+                    "Cancelled"
+                ],
+
+                datasets: [
+
+                    {
+                        label: "Orders",
+
+                        data:
+                            {{ order_chart_data|safe }},
+
+                        backgroundColor: "#ff8a00",
+
+                        borderRadius: 6
+                    }
+
+                ]
+
+            },
+
+            options: chartOptions
+        }
+    );
+
+
+    /* =========================
+       RESERVATIONS
+    ========================= */
+
+    new Chart(
+        document.getElementById("reservationChart"),
+        {
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Pending",
+                    "Confirmed",
+                    "Cancelled",
+                    "Completed"
+                ],
+
+                datasets: [
+
+                    {
+                        label: "Reservations",
+
+                        data:
+                            {{ reservation_chart_data|safe }},
+
+                        backgroundColor: [
+                            "#ff8a00",
+                            "#55d6be",
+                            "#e05252",
+                            "#777777"
+                        ],
+
+                        borderWidth: 0
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+                            color: "#888888",
+                            padding: 18
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       DAILY REVENUE
+    ========================= */
+
+    new Chart(
+        document.getElementById("revenueDayChart"),
+        {
+            type: "line",
+
+            data: {
+
+                labels:
+                    {{ revenue_day_labels|safe }},
+
+                datasets: [
+
+                    {
+                        label: "Daily Revenue",
+
+                        data:
+                            {{ revenue_day_data|safe }},
+
+                        borderColor: "#ff8a00",
+
+                        backgroundColor:
+                            "rgba(255,138,0,.08)",
+
+                        fill: true,
+
+                        tension: 0.3,
+
+                        pointRadius: 3,
+
+                        pointBackgroundColor: "#ff8a00"
+                    }
+
+                ]
+
+            },
+
+            options: chartOptions
+
+        }
+    );
+
+
+    /* =========================
+       MONTHLY REVENUE
+    ========================= */
+
+    new Chart(
+        document.getElementById("revenueMonthChart"),
+        {
+            type: "line",
+
+            data: {
+
+                labels:
+                    {{ revenue_month_labels|safe }},
+
+                datasets: [
+
+                    {
+                        label: "Monthly Revenue",
+
+                        data:
+                            {{ revenue_month_data|safe }},
+
+                        borderColor: "#ff8a00",
+
+                        backgroundColor:
+                            "rgba(255,138,0,.08)",
+
+                        fill: true,
+
+                        tension: 0.3,
+
+                        pointRadius: 3,
+
+                        pointBackgroundColor: "#ff8a00"
+                    }
+
+                ]
+
+            },
+
+            options: chartOptions
+
+        }
+    );
+
+
+    /* =========================
+       PAYMENTS
+    ========================= */
+
+    new Chart(
+        document.getElementById("paymentChart"),
+        {
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Paid",
+                    "Pending",
+                    "Failed"
+                ],
+
+                datasets: [
+
+                    {
+                        label: "Payments",
+
+                        data:
+                            {{ payment_chart_data|safe }},
+
+                        backgroundColor: [
+                            "#55d6be",
+                            "#ff8a00",
+                            "#e05252"
+                        ],
+
+                        borderWidth: 0
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+                            color: "#888888",
+                            padding: 18
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       TOP SELLING
+    ========================= */
+
+    new Chart(
+        document.getElementById("topSellingChart"),
+        {
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ top_selling_labels|safe }},
+
+                datasets: [
+
+                    {
+                        label: "Items Sold",
+
+                        data:
+                            {{ top_selling_data|safe }},
+
+                        backgroundColor: "#ff8a00",
+
+                        borderRadius: 6
+                    }
+
+                ]
+
+            },
+
+            options: chartOptions
+
+        }
+    );
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Reservation Payment
+{% endblock %}
+
+{% block content %}
+
+<section class="reservation-payment-page">
+
+    <!-- HERO -->
+    <div class="reservation-payment-hero">
+
+        <div class="reservation-payment-container">
+
+            <p class="reservation-payment-label">
+                TABLE RESERVATION
+            </p>
+
+            <h1>
+                Complete Your<br>
+                Reservation
+            </h1>
+
+            <p class="reservation-payment-subtitle">
+                Secure your table by completing the
+                ₹500 reservation token payment.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <main class="reservation-payment-container reservation-payment-main">
+
+        <div class="reservation-payment-grid">
+
+            <!-- RESERVATION SUMMARY -->
+            <div class="reservation-summary-card">
+
+                <div class="reservation-summary-header">
+
+                    <div>
+                        <p class="reservation-small-label">
+                            RESERVATION SUMMARY
+                        </p>
+
+                        <h2>
+                            Your Booking
+                        </h2>
+                    </div>
+
+                    <div class="reservation-summary-icon">
+                        ⌂
+                    </div>
+
+                </div>
+
+
+                <div class="reservation-summary-details">
+
+                    <div class="reservation-summary-row">
+
+                        <span>
+                            TABLE
+                        </span>
+
+                        <strong>
+                            Table {{ reservation.table.table_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-summary-row">
+
+                        <span>
+                            DATE
+                        </span>
+
+                        <strong>
+                            {{ reservation.reservation_date }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-summary-row">
+
+                        <span>
+                            TIME
+                        </span>
+
+                        <strong>
+                            {{ reservation.reservation_time }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-summary-row">
+
+                        <span>
+                            GUESTS
+                        </span>
+
+                        <strong>
+                            {{ reservation.number_of_guests }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-summary-row">
+
+                        <span>
+                            PAYMENT STATUS
+                        </span>
+
+                        {% if reservation.token_payment_status == "paid" %}
+
+                            <strong class="reservation-status-paid">
+                                Paid
+                            </strong>
+
+                        {% else %}
+
+                            <strong class="reservation-status-pending">
+                                Pending
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENT CARD -->
+            <div class="reservation-pay-card">
+
+                <div class="reservation-pay-content">
+
+                    <p class="reservation-small-label">
+                        RESERVATION TOKEN
+                    </p>
+
+                    <div class="reservation-pay-amount">
+                        ₹{{ reservation.token_amount }}
+                    </div>
+
+                    <p class="reservation-pay-description">
+                        Pay the reservation token to secure
+                        your selected table.
+                    </p>
+
+                </div>
+
+
+                <div class="reservation-pay-divider"></div>
+
+
+                <div class="reservation-pay-info">
+
+                    <div class="reservation-pay-info-icon">
+                        ₹
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Token payment
+                        </strong>
+
+                        <span>
+                            This amount will be adjusted
+                            against your final cafe bill.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="reservation-pay-button"
+                    >
+                        Pay ₹{{ reservation.token_amount }}
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT NOTICE -->
+        <div class="reservation-payment-notice">
+
+            <div class="reservation-notice-icon">
+                i
+            </div>
+
+            <div>
+
+                <strong>
+                    Important
+                </strong>
+
+                <p>
+                    Your reservation will remain pending after
+                    payment until it is confirmed by the manager.
+                    The ₹500 token will be adjusted against your
+                    final cafe bill.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <div class="reservation-payment-navigation">
+
+            <a href="{% url 'home' %}">
+                ← Back to Home
+            </a>
+
+            <a href="{% url 'my_reservation' %}">
+                My Reservations
+            </a>
+
+        </div>
+
+    </main>
+
+</section>
+
+{% endblock %}

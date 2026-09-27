@@ -1,0 +1,338 @@
+{% extends "home/base.html" %}
+
+
+{% block title %}
+    Local:Byte | Menu
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================
+     MENU HERO
+========================= -->
+
+<section class="menu-hero">
+
+    <div class="page-container">
+
+        <div class="menu-hero-content">
+
+            <p class="section-label">
+                LOCAL:BYTE MENU
+            </p>
+
+            <h1>
+                Something good<br>
+                is waiting for you.
+            </h1>
+
+            <p>
+                Explore our coffee, food, snacks,
+                desserts and more.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     MENU
+========================= -->
+
+<section class="menu-section">
+
+    <div class="page-container">
+
+        <div class="menu-title">
+
+            <p class="section-label">
+                EXPLORE
+            </p>
+
+            <h2>
+                Our Menu
+            </h2>
+
+            <p>
+                Choose a category to explore.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             CATEGORY DROPDOWN
+        ========================== -->
+
+        <div class="menu-categories">
+
+
+            {% for category in categories %}
+
+
+                <details class="menu-dropdown">
+
+                    <summary>
+
+                        <span>
+                            {{ category.name }}
+                        </span>
+
+                        <span class="dropdown-icon">
+                            +
+                        </span>
+
+                    </summary>
+
+
+
+                    <!-- =========================
+                         CATEGORY ITEMS
+                    ========================== -->
+
+                    <div class="category-items">
+
+
+                        {% for item in category.menuitem_set.all %}
+
+
+                            <div class="menu-card">
+
+
+                                <!-- =========================
+                                     IMAGE
+                                ========================== -->
+
+                                {% if item.image %}
+
+                                    <div class="menu-image">
+
+                                        <img
+                                            src="{{ item.image.url }}"
+                                            alt="{{ item.name }}"
+                                        >
+
+                                    </div>
+
+                                {% endif %}
+
+
+
+                                <!-- =========================
+                                     CONTENT
+                                ========================== -->
+
+                                <div class="menu-card-content">
+
+                                    <h3>
+                                        {{ item.name }}
+                                    </h3>
+
+
+                                    <p>
+                                        {{ item.description }}
+                                    </p>
+
+
+                                    <p class="price">
+                                        ₹{{ item.price }}
+                                    </p>
+
+
+
+                                    <!-- =========================
+                                         ADD TO CART
+                                    ========================== -->
+
+                                    <button
+                                        type="button"
+                                        class="cart-button add-to-cart-button"
+                                        data-url="{% url 'add_to_cart' item.id %}"
+                                    >
+                                        Add to Cart
+                                    </button>
+
+                                </div>
+
+
+                            </div>
+
+
+                        {% empty %}
+
+
+                            <p class="empty-menu">
+                                No items available in this category.
+                            </p>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                </details>
+
+
+            {% empty %}
+
+
+                <!-- =========================
+                     EMPTY MENU
+                ========================== -->
+
+                <div class="empty-menu-page">
+
+                    <h2>
+                        Menu coming soon.
+                    </h2>
+
+                    <p>
+                        We are preparing something delicious for you.
+                    </p>
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     MENU CTA
+========================= -->
+
+<section class="menu-cta">
+
+    <div class="page-container">
+
+        <div class="menu-cta-card">
+
+            <p class="section-label">
+                MAKE IT A MOMENT
+            </p>
+
+            <h2>
+                Found something you love?
+            </h2>
+
+            <p>
+                Book your table and enjoy it at Local:Byte.
+            </p>
+
+            <a
+                href="{% url 'book_table' %}"
+                class="hero-button primary-button"
+            >
+                Book a Table
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     ADD TO CART JAVASCRIPT
+========================= -->
+
+<script>
+
+    const cartButtons = document.querySelectorAll(
+        ".add-to-cart-button"
+    );
+
+
+    cartButtons.forEach(function(button) {
+
+
+        button.addEventListener(
+            "click",
+            function() {
+
+
+                const url = button.dataset.url;
+
+
+                fetch(url, {
+
+                    method: "GET",
+
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+
+                })
+
+
+                .then(function(response) {
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    if (data.success) {
+
+
+                        button.textContent = "Added ✓";
+
+                        button.disabled = true;
+
+
+                        setTimeout(function() {
+
+                            button.textContent = "Add to Cart";
+
+                            button.disabled = false;
+
+                        }, 1500);
+
+
+                    }
+
+                })
+
+
+                .catch(function(error) {
+
+                    console.error(
+                        "Add to cart error:",
+                        error
+                    );
+
+                });
+
+
+            }
+        );
+
+
+    });
+
+</script>
+
+
+{% endblock %}

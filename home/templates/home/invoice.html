@@ -1,0 +1,404 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Invoice
+{% endblock %}
+
+
+{% block content %}
+
+<section class="table-invoice-page">
+
+    <div class="page-container">
+
+
+        <!-- =========================
+             INVOICE HEADER
+        ========================== -->
+
+        <div class="table-invoice-header">
+
+            <div>
+
+                <p class="section-label">
+                    RESERVATION INVOICE
+                </p>
+
+                <h1>
+                    Your Invoice
+                </h1>
+
+                <p>
+                    Reservation payment receipt from Local:Byte.
+                </p>
+
+            </div>
+
+
+            <div class="table-invoice-number">
+
+                <span>
+                    INVOICE
+                </span>
+
+                <strong>
+                    {{ invoice.invoice_number }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             INVOICE CARD
+        ========================== -->
+
+        <div class="table-invoice-card">
+
+
+            <!-- =========================
+                 BUSINESS + CUSTOMER
+            ========================== -->
+
+            <div class="table-invoice-top">
+
+
+                <!-- BUSINESS -->
+
+                <div class="invoice-business">
+
+                    <p class="invoice-small-label">
+                        FROM
+                    </p>
+
+                    <h2>
+                        Local<span>:Byte</span>
+                    </h2>
+
+                    <p>
+                        Hazaribagh, Jharkhand
+                    </p>
+
+                </div>
+
+
+                <!-- CUSTOMER -->
+
+                <div class="invoice-customer">
+
+                    <p class="invoice-small-label">
+                        BILLED TO
+                    </p>
+
+                    <h3>
+                        {{ invoice.customer.username }}
+                    </h3>
+
+                    {% if invoice.customer.email %}
+
+                        <p>
+                            {{ invoice.customer.email }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 RESERVATION DETAILS
+            ========================== -->
+
+            <div class="table-invoice-details">
+
+
+                <!-- INVOICE NUMBER -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Invoice
+                    </span>
+
+                    <strong>
+                        {{ invoice.invoice_number }}
+                    </strong>
+
+                </div>
+
+
+                <!-- RESERVATION -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Reservation
+                    </span>
+
+                    <strong>
+                        #{{ invoice.reservation.id }}
+                    </strong>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Table
+                    </span>
+
+                    <strong>
+                        Table {{ invoice.reservation.table.table_number }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Date
+                    </span>
+
+                    <strong>
+                        {{ invoice.reservation.reservation_date|date:"d M Y" }}
+                    </strong>
+
+                </div>
+
+
+                <!-- TIME -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Time
+                    </span>
+
+                    <strong>
+                        {{ invoice.reservation.reservation_time|time:"h:i A" }}
+                    </strong>
+
+                </div>
+
+
+                <!-- GUESTS -->
+
+                <div class="invoice-detail">
+
+                    <span>
+                        Guests
+                    </span>
+
+                    <strong>
+                        {{ invoice.reservation.number_of_guests }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 PAYMENT DETAILS
+            ========================== -->
+
+            <div class="table-invoice-payment">
+
+                <div class="invoice-payment-header">
+
+                    <div>
+
+                        <p class="invoice-small-label">
+                            PAYMENT DETAILS
+                        </p>
+
+                        <h2>
+                            Reservation Token
+                        </h2>
+
+                    </div>
+
+                    <span>
+                        ₹{{ invoice.amount }}
+                    </span>
+
+                </div>
+
+
+                <!-- AMOUNT -->
+
+                <div class="invoice-payment-row">
+
+                    <span>
+                        Token Amount
+                    </span>
+
+                    <strong>
+                        ₹{{ invoice.amount }}
+                    </strong>
+
+                </div>
+
+
+                <!-- PAYMENT METHOD -->
+
+                <div class="invoice-payment-row">
+
+                    <span>
+                        Payment Method
+                    </span>
+
+                    <strong>
+                        {{ invoice.payment_method }}
+                    </strong>
+
+                </div>
+
+
+                <!-- PAYMENT STATUS -->
+
+                <div class="invoice-payment-row">
+
+                    <span>
+                        Payment Status
+                    </span>
+
+                    {% if invoice.payment_status == "paid" %}
+
+                        <strong class="invoice-paid">
+                            Paid
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="invoice-payment-pending">
+                            {{ invoice.payment_status|title }}
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="invoice-payment-total">
+
+                    <span>
+                        Amount Paid
+                    </span>
+
+                    <strong>
+                        ₹{{ invoice.amount }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 PAYMENT NOTE
+            ========================== -->
+
+            {% if invoice.payment_status == "paid" %}
+
+                <div class="table-invoice-note">
+
+                    <div class="table-invoice-note-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Payment received
+                        </h3>
+
+                        <p>
+                            Your ₹{{ invoice.amount }} reservation
+                            token has been successfully received.
+                            This amount will be adjusted against
+                            your final cafe bill.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- =========================
+                 INVOICE FOOTER
+            ========================== -->
+
+            <div class="table-invoice-footer">
+
+                <div>
+
+                    <p>
+                        Thank you for choosing
+                        <strong>Local:Byte</strong>.
+                    </p>
+
+                    <span>
+                        Sip. Script. Savor.
+                    </span>
+
+                </div>
+
+
+                <div class="table-invoice-created">
+
+                    <span>
+                        Invoice Date
+                    </span>
+
+                    <strong>
+                        {{ invoice.created_at|date:"d M Y, h:i A" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ACTIONS
+        ========================== -->
+
+        <div class="table-invoice-actions">
+
+            <a
+                href="{% url 'my_reservation' %}"
+                class="hero-button secondary-button"
+            >
+                My Reservations
+            </a>
+
+            <a
+                href="{% url 'menu' %}"
+                class="hero-button primary-button"
+            >
+                Explore Menu
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

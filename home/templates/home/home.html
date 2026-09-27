@@ -1,0 +1,393 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Home
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================
+     HERO SECTION
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <p class="hero-label">
+            LOCAL:BYTE CAFE
+        </p>
+
+        <h1>
+            Good Coffee.<br>
+            Good Food.<br>
+            Good Company.
+        </h1>
+
+        <p class="hero-text">
+            A cozy space for thoughtfully crafted coffee,
+            delicious food, and conversations worth staying for.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{% url 'menu' %}"
+               class="hero-button primary-button">
+
+                Explore Menu
+
+            </a>
+
+            <a href="{% url 'book_table' %}"
+               class="hero-button secondary-button">
+
+                Book a Table
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     WELCOME SECTION
+========================= -->
+
+<section class="welcome-section">
+
+    <div class="page-container">
+
+        <div class="welcome-content">
+
+            <p class="section-label">
+                WELCOME TO LOCAL:BYTE
+            </p>
+
+            <h2>
+                Where good taste meets good company.
+            </h2>
+
+            <p>
+                Thoughtfully crafted coffee, beautifully prepared food,
+                and a space made for slow moments and meaningful
+                conversations.
+            </p>
+
+            <p class="welcome-tagline">
+                Sip. Script. Savor.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ABOUT SECTION
+========================= -->
+
+<section class="about-section">
+
+    <div class="page-container">
+
+        <div class="about-grid">
+
+            <div class="about-content">
+
+                <p class="section-label">
+                    OUR STORY
+                </p>
+
+                <h2>
+                    Your local place to slow down.
+                </h2>
+
+                {% if cafe %}
+
+                    <p>
+                        {{ cafe.about }}
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        Local:Byte is a cozy cafe built around
+                        good food, great coffee, and good conversations.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="about-card">
+
+                <div class="about-card-icon">
+                    ☕
+                </div>
+
+                <h3>
+                    Made for Moments
+                </h3>
+
+                <p>
+                    Whether it is your morning coffee,
+                    a relaxed meal, or time with friends,
+                    there is always a reason to stay a little longer.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CAFE STATUS
+========================= -->
+
+<section class="status-section">
+
+    <div class="page-container">
+
+        <div class="status-card">
+
+            <div>
+
+                <p class="section-label">
+                    TODAY AT LOCAL:BYTE
+                </p>
+
+                <h2>
+                    {% if is_open %}
+                        We are open.
+                    {% else %}
+                        We are currently closed.
+                    {% endif %}
+                </h2>
+
+                {% if cafe %}
+
+                    <p>
+                        Open from
+                        {{ cafe.opening_time }}
+                        to
+                        {{ cafe.closing_time }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="status-indicator">
+
+                {% if is_open %}
+
+                    <span class="status-dot open"></span>
+
+                    <span>
+                        Open Now
+                    </span>
+
+                {% else %}
+
+                    <span class="status-dot closed"></span>
+
+                    <span>
+                        Closed
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BOOK A TABLE
+========================= -->
+
+<section class="booking-cta">
+
+    <div class="page-container">
+
+        <div class="booking-cta-card">
+
+            <p class="section-label">
+                YOUR TABLE IS WAITING
+            </p>
+
+            <h2>
+                Make your next visit memorable.
+            </h2>
+
+            <p>
+                Choose your date, time, guests, and table.
+                We will take care of the rest.
+            </p>
+
+            <a href="{% url 'book_table' %}"
+               class="hero-button primary-button">
+
+                Book a Table
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SPECIAL OCCASIONS
+========================= -->
+
+<section class="occasion-section">
+
+    <div class="page-container">
+
+        <div class="occasion-grid">
+
+            <div class="occasion-content">
+
+                <p class="section-label">
+                    SPECIAL OCCASIONS
+                </p>
+
+                <h2>
+                    Celebrate your moments with us.
+                </h2>
+
+                <p>
+                    Planning a birthday, get-together,
+                    anniversary, or a special evening?
+                    Talk to our team and let us help make it memorable.
+                </p>
+
+                <a href="{% url 'contact' %}"
+                   class="text-button">
+
+                    Contact Us →
+
+                </a>
+
+            </div>
+
+
+            <div class="occasion-card">
+
+                <div class="occasion-icon">
+                    ✨
+                </div>
+
+                <h3>
+                    Let's Make It Special
+                </h3>
+
+                <p>
+                    For special arrangements and celebrations,
+                    get in touch with our team.
+                </p>
+
+                {% if cafe and cafe.phone %}
+
+                    <a href="tel:{{ cafe.phone }}"
+                       class="call-button">
+
+                        Call Us
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROFILE SECTION
+========================= -->
+
+{% if user.is_authenticated %}
+
+<section class="profile-section">
+
+    <div class="page-container">
+
+        <div class="profile-card">
+
+            <div class="profile-content">
+
+                <p class="section-label">
+                    YOUR LOCAL:BYTE
+                </p>
+
+                <h2>
+                    Welcome back,
+                    {{ user.first_name|default:user.username }}.
+                </h2>
+
+                <p>
+                    Manage your profile, view your orders,
+                    and keep track of your reservations.
+                </p>
+
+                <div class="profile-actions">
+
+                    <a href="{% url 'profile' %}"
+                       class="hero-button primary-button">
+
+                        My Profile
+
+                    </a>
+
+                    <a href="{% url 'my_orders' %}"
+                       class="hero-button secondary-button">
+
+                        My Orders
+
+                    </a>
+
+                    <a href="{% url 'my_reservation' %}"
+                       class="hero-button secondary-button">
+
+                        My Reservations
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% endblock %}

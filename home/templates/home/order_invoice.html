@@ -1,0 +1,381 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+Local:Byte | Order Invoice
+{% endblock %}
+
+{% block content %}
+
+<section class="invoice-page">
+
+
+<div class="page-container">
+
+
+    <!-- =========================
+         SUCCESS HEADER
+    ========================== -->
+
+    <div class="invoice-success">
+
+        <div class="invoice-success-icon">
+            ✓
+        </div>
+
+        <p class="section-label">
+            PAYMENT SUCCESSFUL
+        </p>
+
+        <h1>
+            Your order is confirmed.
+        </h1>
+
+        <p>
+            Thank you for ordering from Local:Byte.
+            Your order has been received successfully.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         INVOICE CARD
+    ========================== -->
+
+    <div class="invoice-card">
+
+
+        <!-- =========================
+             INVOICE HEADER
+        ========================== -->
+
+        <div class="invoice-header">
+
+            <div>
+
+                <h2>
+                    Local<span>:Byte</span>
+                </h2>
+
+                <p>
+                    Sip. Script. Savor.
+                </p>
+
+            </div>
+
+
+            <div class="invoice-details">
+
+                <p>
+                    <span>Invoice</span>
+                    #{{ invoice.invoice_number }}
+                </p>
+
+                <p>
+                    <span>Order</span>
+                    #{{ order.id }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="invoice-divider"></div>
+
+
+        <!-- =========================
+             CUSTOMER INFORMATION
+        ========================== -->
+
+        <div class="invoice-info-grid">
+
+
+            <div>
+
+                <p class="invoice-label">
+                    BILLED TO
+                </p>
+
+                <strong>
+                    {{ request.user.username }}
+                </strong>
+
+                {% if request.user.email %}
+
+                    <p>
+                        {{ request.user.email }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                <p class="invoice-label">
+                    PAYMENT
+                </p>
+
+                <strong>
+                    {{ invoice.get_payment_method_display }}
+                </strong>
+
+                <p class="invoice-paid">
+                    Paid
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <p class="invoice-label">
+                    DATE
+                </p>
+
+                <strong>
+                    {{ invoice.created_at|date:"d M Y" }}
+                </strong>
+
+                <p>
+                    {{ invoice.created_at|time:"h:i A" }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="invoice-divider"></div>
+
+
+        <!-- =========================
+             ORDER ITEMS
+        ========================== -->
+
+        <div class="invoice-items">
+
+            <div class="invoice-items-header">
+
+                <span>
+                    ITEM
+                </span>
+
+                <span>
+                    QTY
+                </span>
+
+                <span>
+                    PRICE
+                </span>
+
+                <span>
+                    TOTAL
+                </span>
+
+            </div>
+
+
+            {% for item in invoice_items %}
+
+                <div class="invoice-item">
+
+                    <div>
+
+                        <strong>
+                            {{ item.name }}
+                        </strong>
+
+                    </div>
+
+
+                    <span>
+                        {{ item.quantity }}
+                    </span>
+
+
+                    <span>
+                        ₹{{ item.price }}
+                    </span>
+
+
+                    <strong>
+                        ₹{{ item.subtotal }}
+                    </strong>
+
+                </div>
+
+            {% empty %}
+
+                <div class="invoice-empty">
+
+                    <p>
+                        No items found for this order.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="invoice-divider"></div>
+
+
+        <!-- =========================
+             TOTALS
+        ========================== -->
+
+        <div class="invoice-total-section">
+
+            <div class="invoice-total-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong>
+                    ₹{{ order.subtotal }}
+                </strong>
+
+            </div>
+
+
+            <div class="invoice-total-row">
+
+                <span>
+                    GST ({{ order.gst_rate }}%)
+                </span>
+
+                <strong>
+                    ₹{{ order.gst_amount }}
+                </strong>
+
+            </div>
+
+
+            <div class="invoice-grand-total">
+
+                <span>
+                    Grand Total
+                </span>
+
+                <strong>
+                    ₹{{ order.total_amount }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PAYMENT STATUS
+        ========================== -->
+
+        <div class="invoice-payment-status">
+
+            <div class="invoice-paid-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <strong>
+                    Payment completed
+                </strong>
+
+                <p>
+                    Payment received successfully.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ORDER STATUS
+        ========================== -->
+
+        <div class="invoice-order-status">
+
+            <div>
+
+                <p class="invoice-label">
+                    ORDER STATUS
+                </p>
+
+                <strong>
+                    {{ order.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="invoice-label">
+                    PAYMENT STATUS
+                </p>
+
+                <strong>
+                    {{ order.get_payment_status_display }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             INVOICE FOOTER
+        ========================== -->
+
+        <div class="invoice-footer">
+
+            <p>
+                Thank you for choosing Local:Byte.
+            </p>
+
+            <p>
+                Please keep this invoice for your records.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTION BUTTONS
+    ========================== -->
+
+    <div class="invoice-actions">
+
+        <a
+            href="{% url 'my_orders' %}"
+            class="hero-button primary-button"
+        >
+            View My Orders
+        </a>
+
+
+        <a
+            href="{% url 'menu' %}"
+            class="hero-button secondary-button"
+        >
+            Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}

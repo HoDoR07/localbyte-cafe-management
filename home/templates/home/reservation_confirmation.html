@@ -1,0 +1,233 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Reservation Confirmation
+{% endblock %}
+
+{% block content %}
+
+<section class="reservation-confirmation-page">
+
+    <!-- HERO -->
+    <div class="reservation-confirmation-hero">
+
+        <div class="reservation-confirmation-container">
+
+            <p class="reservation-confirmation-label">
+                TABLE RESERVATION
+            </p>
+
+            <h1>
+                Confirm Your<br>
+                Reservation
+            </h1>
+
+            <p class="reservation-confirmation-subtitle">
+                Review your reservation details before continuing
+                to the ₹500 reservation token payment.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <main class="reservation-confirmation-container reservation-confirmation-main">
+
+        <div class="reservation-confirmation-grid">
+
+            <!-- RESERVATION DETAILS -->
+            <div class="reservation-details-card">
+
+                <div class="reservation-card-header">
+
+                    <div>
+                        <p class="reservation-small-label">
+                            RESERVATION DETAILS
+                        </p>
+
+                        <h2>
+                            Your Table
+                        </h2>
+                    </div>
+
+                    <div class="reservation-card-icon">
+                        ⌂
+                    </div>
+
+                </div>
+
+
+                <div class="reservation-detail-list">
+
+                    <div class="reservation-detail-row">
+
+                        <span>
+                            TABLE
+                        </span>
+
+                        <strong>
+                            {{ table_id }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-detail-row">
+
+                        <span>
+                            DATE
+                        </span>
+
+                        <strong>
+                            {{ reservation_date }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-detail-row">
+
+                        <span>
+                            TIME
+                        </span>
+
+                        <strong>
+                            {{ reservation_time }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="reservation-detail-row">
+
+                        <span>
+                            GUESTS
+                        </span>
+
+                        <strong>
+                            {{ number_of_guests }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENT CARD -->
+            <div class="reservation-payment-card">
+
+                <div class="reservation-payment-top">
+
+                    <p class="reservation-small-label">
+                        RESERVATION TOKEN
+                    </p>
+
+                    <div class="reservation-token-amount">
+                        ₹500
+                    </div>
+
+                    <p>
+                        This ₹500 token will be adjusted against
+                        your final cafe bill.
+                    </p>
+
+                </div>
+
+
+                <div class="reservation-payment-divider"></div>
+
+
+                <div class="reservation-payment-info">
+
+                    <div class="reservation-payment-icon">
+                        ₹
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Secure your reservation
+                        </strong>
+
+                        <span>
+                            Continue to payment to complete
+                            your reservation request.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="continue_payment"
+                    >
+
+                    <button
+                        type="submit"
+                        class="reservation-payment-button"
+                    >
+                        Continue to Payment
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTE -->
+        <div class="reservation-confirmation-note">
+
+            <div class="reservation-note-icon">
+                i
+            </div>
+
+            <div>
+
+                <strong>
+                    Before you continue
+                </strong>
+
+                <p>
+                    Please make sure your table, date, time,
+                    and guest details are correct. Your reservation
+                    will remain pending until the token payment
+                    is completed and the manager confirms it.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BACK -->
+        <div class="reservation-confirmation-back">
+
+            <a href="{% url 'book_table' %}">
+                ← Change Reservation
+            </a>
+
+            <a href="{% url 'home' %}">
+                Back to Home
+            </a>
+
+        </div>
+
+    </main>
+
+</section>
+
+{% endblock %}

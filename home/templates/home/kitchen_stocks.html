@@ -1,0 +1,199 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+    Local:Byte | Kitchen Stock
+{% endblock %}
+
+{% block content %}
+
+<section class="kitchen-stock-page">
+
+    <!-- HERO -->
+    <div class="kitchen-stock-hero">
+
+        <div class="kitchen-stock-container">
+
+            <div>
+
+                <p class="kitchen-stock-label">
+                    KITCHEN OPERATIONS
+                </p>
+
+                <h1>
+                    Kitchen Stock
+                </h1>
+
+                <p class="kitchen-stock-subtitle">
+                    View the stock currently available in the kitchen.
+                </p>
+
+            </div>
+
+
+            <div class="kitchen-stock-navigation">
+
+                <a href="{% url 'manager_dashboard' %}">
+                    ← Dashboard
+                </a>
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <main class="kitchen-stock-container kitchen-stock-main">
+
+        <div class="kitchen-stock-section-header">
+
+            <div>
+
+                <p class="kitchen-stock-label">
+                    CURRENT STOCK
+                </p>
+
+                <h2>
+                    Available In Kitchen
+                </h2>
+
+            </div>
+
+            <span class="kitchen-stock-count">
+                {{ kitchen_stocks|length }} Items
+            </span>
+
+        </div>
+
+
+        {% if kitchen_stocks %}
+
+            <div class="kitchen-stock-grid">
+
+                {% for stock in kitchen_stocks %}
+
+                    <div class="kitchen-stock-card">
+
+                        <!-- CARD HEADER -->
+                        <div class="kitchen-stock-card-header">
+
+                            <div class="kitchen-stock-icon">
+                                {{ stock.inventory_item.name|first|upper }}
+                            </div>
+
+                            <div>
+
+                                <span class="kitchen-stock-small-label">
+                                    STOCK ITEM
+                                </span>
+
+                                <h3>
+                                    {{ stock.inventory_item.name }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- QUANTITY -->
+                        <div class="kitchen-stock-quantity">
+
+                            <span>
+                                QUANTITY AVAILABLE
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    {{ stock.quantity }}
+                                </strong>
+
+                                <small>
+                                    {{ stock.inventory_item.unit }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- UPDATED -->
+                        <div class="kitchen-stock-updated">
+
+                            <span>
+                                LAST UPDATED
+                            </span>
+
+                            <strong>
+                                {{ stock.updated_at|date:"d M Y, H:i" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="kitchen-stock-empty">
+
+                <div class="kitchen-stock-empty-icon">
+                    —
+                </div>
+
+                <h2>
+                    No kitchen stock
+                </h2>
+
+                <p>
+                    No inventory has been issued to the kitchen yet.
+                </p>
+
+                <a href="{% url 'inventory' %}">
+                    Go To Inventory →
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- FOOTER ACTION -->
+        <div class="kitchen-stock-footer">
+
+            <div>
+
+                <p class="kitchen-stock-label">
+                    STOCK MANAGEMENT
+                </p>
+
+                <h3>
+                    Need to issue more stock?
+                </h3>
+
+            </div>
+
+            <a href="{% url 'inventory' %}">
+                Manage Inventory
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </main>
+
+</section>
+
+{% endblock %}

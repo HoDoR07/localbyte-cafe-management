@@ -1,0 +1,389 @@
+{% extends "home/base.html" %}
+
+{% block title %}
+Local:Byte | My Reservations
+{% endblock %}
+
+{% block content %}
+
+<section class="reservations-page">
+
+
+<div class="page-container">
+
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="reservations-header">
+
+        <p class="section-label">
+            YOUR RESERVATIONS
+        </p>
+
+        <h1>
+            My Reservations
+        </h1>
+
+        <p>
+            View your table bookings and reservation details.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         RESERVATIONS LIST
+    ========================== -->
+
+    <div class="reservations-list">
+
+        {% for reservation in reservations %}
+
+            <div class="reservation-card">
+
+
+                <!-- =========================
+                     RESERVATION HEADER
+                ========================== -->
+
+                <div class="reservation-header">
+
+                    <div>
+
+                        <p class="reservation-label">
+                            RESERVATION
+                        </p>
+
+                        <h2>
+                            #{{ reservation.id }}
+                        </h2>
+
+                    </div>
+
+
+                    <!-- RESERVATION STATUS -->
+
+                    <div class="reservation-status">
+
+                        {% if reservation.status == "confirmed" %}
+
+                            <span class="reservation-status-confirmed">
+                                Confirmed
+                            </span>
+
+                        {% elif reservation.status == "pending" %}
+
+                            <span class="reservation-status-pending">
+                                Pending
+                            </span>
+
+                        {% elif reservation.status == "cancelled" %}
+
+                            <span class="reservation-status-cancelled">
+                                Cancelled
+                            </span>
+
+                        {% elif reservation.status == "completed" %}
+
+                            <span class="reservation-status-completed">
+                                Completed
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     RESERVATION DETAILS
+                ========================== -->
+
+                <div class="reservation-details">
+
+
+                    <!-- TABLE -->
+
+                    <div class="reservation-detail">
+
+                        <span>
+                            Table
+                        </span>
+
+                        <strong>
+                            Table {{ reservation.table.table_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- DATE -->
+
+                    <div class="reservation-detail">
+
+                        <span>
+                            Date
+                        </span>
+
+                        <strong>
+                            {{ reservation.reservation_date|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TIME -->
+
+                    <div class="reservation-detail">
+
+                        <span>
+                            Time
+                        </span>
+
+                        <strong>
+                            {{ reservation.reservation_time|time:"h:i A" }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- GUESTS -->
+
+                    <div class="reservation-detail">
+
+                        <span>
+                            Guests
+                        </span>
+
+                        <strong>
+                            {{ reservation.number_of_guests }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     TOKEN PAYMENT
+                ========================== -->
+
+                <div class="reservation-payment">
+
+
+                    <!-- TOKEN AMOUNT -->
+
+                    <div>
+
+                        <span>
+                            Reservation Token
+                        </span>
+
+                        <strong>
+                            ₹{{ reservation.token_amount }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TOKEN PAYMENT STATUS -->
+
+                    <div>
+
+                        <span>
+                            Token Payment
+                        </span>
+
+
+                        {% if reservation.token_payment_status == "paid" %}
+
+                            <strong class="reservation-paid">
+                                Paid
+                            </strong>
+
+                        {% elif reservation.token_payment_status == "pending" %}
+
+                            <strong class="reservation-unpaid">
+                                Pending
+                            </strong>
+
+                        {% elif reservation.token_payment_status == "failed" %}
+
+                            <strong class="reservation-failed">
+                                Failed
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     CONFIRMED NOTE
+                ========================== -->
+
+                {% if reservation.status == "confirmed" %}
+
+                    <div class="reservation-note">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Your table is reserved.
+                            The ₹{{ reservation.token_amount }}
+                            token amount will be adjusted
+                            against your final cafe bill.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =========================
+                     CANCELLED NOTE
+                ========================== -->
+
+                {% if reservation.status == "cancelled" %}
+
+                    <div class="reservation-cancelled-note">
+
+                        <span>
+                            !
+                        </span>
+
+                        <p>
+                            This reservation has been cancelled.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =========================
+                     COMPLETED NOTE
+                ========================== -->
+
+                {% if reservation.status == "completed" %}
+
+                    <div class="reservation-completed-note">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            This reservation has been completed.
+                            Thank you for visiting Local:Byte.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =========================
+                     ACTIONS
+                ========================== -->
+
+                <div class="reservation-actions">
+
+
+                    <a
+                        href="{% url 'menu' %}"
+                        class="reservation-action secondary"
+                    >
+                        Explore Menu
+                    </a>
+
+
+                    {% if reservation.status == "confirmed" %}
+
+                        <a
+                            href="{% url 'table_invoice' reservation.id %}"
+                            class="reservation-action secondary"
+                        >
+                            View Invoice
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if reservation.status == "pending" and reservation.token_payment_status == "pending" %}
+
+                        <a
+                            href="{% url 'reservation_payment' %}"
+                            class="reservation-action primary"
+                        >
+                            Complete Payment
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if reservation.status == "completed" %}
+
+                        <a
+                            href="{% url 'table_invoice' reservation.id %}"
+                            class="reservation-action secondary"
+                        >
+                            View Invoice
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+
+            <!-- =========================
+                 EMPTY STATE
+            ========================== -->
+
+            <div class="reservations-empty">
+
+                <div class="reservations-empty-icon">
+                    🪑
+                </div>
+
+                <h2>
+                    No reservations yet.
+                </h2>
+
+                <p>
+                    Book a table at Local:Byte
+                    and your reservation will appear here.
+                </p>
+
+                <a
+                    href="{% url 'book_table' %}"
+                    class="hero-button primary-button"
+                >
+                    Book a Table
+                </a>
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}
