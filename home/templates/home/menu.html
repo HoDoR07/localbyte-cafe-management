@@ -1,5 +1,5 @@
 {% extends "home/base.html" %}
-
+{% load static %}
 
 {% block title %}
     Local:Byte | Menu
@@ -110,12 +110,13 @@
                                      IMAGE
                                 ========================== -->
 
+
                                 {% if item.image %}
 
                                     <div class="menu-image">
 
                                         <img
-                                            src="{{ item.image.url }}"
+                                            src="{% static 'home/'|add:item.image.name %}"
                                             alt="{{ item.name }}"
                                         >
 
