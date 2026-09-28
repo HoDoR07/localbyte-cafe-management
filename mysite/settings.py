@@ -29,7 +29,11 @@ SECRET_KEY = 'django-insecure-g2#xwmpqgh4#pqv+%m$xa_wr&+1c=#04dwi+(2!$&f-_@bf#82
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localbyte-cafe-management.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
