@@ -683,8 +683,8 @@ def checkout(request):
     total = 0
 
     for item in cart_items:
-        item_subtotal = item.menu_item.price * item.quantity
-        total += item_subtotal
+        item.item_subtotal = item.menu_item.price * item.quantity
+        total += item.item_subtotal
 
     cafe_setting = CafeSetting.objects.first()  
     gst_rate = cafe_setting.gst_rate
