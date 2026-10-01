@@ -1,50 +1,101 @@
 {% extends "home/base.html" %}
+{% load static %}
 
 {% block title %}
     Local:Byte | Home
 {% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'home/home.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<!-- =========================
+
+<!-- =========================================================
      HERO SECTION
-========================= -->
+========================================================= -->
 
 <section class="hero">
 
-    <div class="hero-content">
+    <div class="page-container hero-container">
 
-        <p class="hero-label">
-            LOCAL:BYTE CAFE
-        </p>
+        <!-- LEFT: HERO CONTENT -->
 
-        <h1>
-            Good Coffee.<br>
-            Good Food.<br>
-            Good Company.
-        </h1>
+        <div class="hero-content">
 
-        <p class="hero-text">
-            A cozy space for thoughtfully crafted coffee,
-            delicious food, and conversations worth staying for.
-        </p>
+            <p class="hero-label">
+                LOCAL:BYTE CAFE
+            </p>
 
-        <div class="hero-buttons">
+            <h1>
+                Good Coffee.<br>
+                Good Food.<br>
+                <span>Good Company.</span>
+            </h1>
 
-            <a href="{% url 'menu' %}"
-               class="hero-button primary-button">
+            <p class="hero-text">
+                A cozy space for thoughtfully crafted coffee,
+                delicious food, and conversations worth staying for.
+            </p>
 
-                Explore Menu
+            <div class="hero-buttons">
 
-            </a>
+                <a href="{% url 'menu' %}"
+                   class="hero-button primary-button">
+                    Explore Menu
+                </a>
 
-            <a href="{% url 'book_table' %}"
-               class="hero-button secondary-button">
+                <a href="{% url 'book_table' %}"
+                   class="hero-button secondary-button">
+                    Book a Table
+                </a>
 
-                Book a Table
+            </div>
 
-            </a>
+            <div class="hero-meta">
+
+                <div class="hero-meta-item">
+
+                    <span class="hero-meta-dot"></span>
+
+                    <span>
+                        {% if is_open %}
+                            Open Now
+                        {% else %}
+                            Currently Closed
+                        {% endif %}
+                    </span>
+
+                </div>
+
+                {% if cafe %}
+
+                    <div class="hero-meta-item">
+
+                        <span>
+                            {{ cafe.opening_time }} — {{ cafe.closing_time }}
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT: HERO IMAGE -->
+
+        <div class="hero-image">
+
+            <div class="hero-image-glow"></div>
+
+            <img
+                src="{% static 'home/images/hero-coffee.png' %}"
+                alt="Local:Byte Coffee"
+            >
 
         </div>
 
@@ -53,33 +104,70 @@
 </section>
 
 
-<!-- =========================
-     WELCOME SECTION
-========================= -->
+<!-- =========================================================
+     SIGNATURE SECTION
+========================================================= -->
 
-<section class="welcome-section">
+<section class="signature-section">
 
     <div class="page-container">
 
-        <div class="welcome-content">
+        <div class="signature-grid">
 
-            <p class="section-label">
-                WELCOME TO LOCAL:BYTE
-            </p>
+            <!-- SIGNATURE VISUAL -->
 
-            <h2>
-                Where good taste meets good company.
-            </h2>
+            <div class="signature-visual">
 
-            <p>
-                Thoughtfully crafted coffee, beautifully prepared food,
-                and a space made for slow moments and meaningful
-                conversations.
-            </p>
+                <div class="signature-glow"></div>
 
-            <p class="welcome-tagline">
-                Sip. Script. Savor.
-            </p>
+                <div class="signature-visual-content">
+
+                    <p class="signature-number">
+                        01
+                    </p>
+
+                    <div class="signature-symbol">
+                        ☕
+                    </div>
+
+                    <p class="signature-visual-label">
+                        SIGNATURE EXPERIENCE
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIGNATURE CONTENT -->
+
+            <div class="signature-content">
+
+                <p class="section-label">
+                    SIGNATURE
+                </p>
+
+                <h2>
+                    Made for your
+                    <span>kind of moment.</span>
+                </h2>
+
+                <p class="signature-text">
+                    Thoughtfully crafted coffee, delicious food,
+                    and a space designed for conversations,
+                    creativity, and moments worth remembering.
+                </p>
+
+                <p class="signature-tagline">
+                    Sip. Script. Savor.
+                </p>
+
+                <a href="{% url 'menu' %}"
+                   class="text-button">
+                    Explore Menu →
+                </a>
+
+            </div>
 
         </div>
 
@@ -88,15 +176,17 @@
 </section>
 
 
-<!-- =========================
-     ABOUT SECTION
-========================= -->
+<!-- =========================================================
+     ABOUT / STORY SECTION
+========================================================= -->
 
 <section class="about-section">
 
     <div class="page-container">
 
         <div class="about-grid">
+
+            <!-- ABOUT CONTENT -->
 
             <div class="about-content">
 
@@ -105,7 +195,8 @@
                 </p>
 
                 <h2>
-                    Your local place to slow down.
+                    Your local place
+                    to slow down.
                 </h2>
 
                 {% if cafe %}
@@ -126,11 +217,23 @@
             </div>
 
 
+            <!-- ABOUT CARD -->
+
             <div class="about-card">
 
-                <div class="about-card-icon">
-                    ☕
+                <div class="about-card-top">
+
+                    <span class="about-card-label">
+                        LOCAL:BYTE
+                    </span>
+
+                    <span class="about-card-icon">
+                        ☕
+                    </span>
+
                 </div>
+
+                <div class="about-card-line"></div>
 
                 <h3>
                     Made for Moments
@@ -139,8 +242,19 @@
                 <p>
                     Whether it is your morning coffee,
                     a relaxed meal, or time with friends,
-                    there is always a reason to stay a little longer.
+                    there is always a reason to stay
+                    a little longer.
                 </p>
+
+                <div class="about-card-footer">
+
+                    <span>SIP</span>
+                    <span>•</span>
+                    <span>SCRIPT</span>
+                    <span>•</span>
+                    <span>SAVOR</span>
+
+                </div>
 
             </div>
 
@@ -151,9 +265,9 @@
 </section>
 
 
-<!-- =========================
+<!-- =========================================================
      CAFE STATUS
-========================= -->
+========================================================= -->
 
 <section class="status-section">
 
@@ -161,33 +275,37 @@
 
         <div class="status-card">
 
-            <div>
+            <div class="status-content">
 
                 <p class="section-label">
                     TODAY AT LOCAL:BYTE
                 </p>
 
                 <h2>
+
                     {% if is_open %}
                         We are open.
                     {% else %}
                         We are currently closed.
                     {% endif %}
+
                 </h2>
 
                 {% if cafe %}
 
                     <p>
                         Open from
-                        {{ cafe.opening_time }}
+                        <strong>{{ cafe.opening_time }}</strong>
                         to
-                        {{ cafe.closing_time }}
+                        <strong>{{ cafe.closing_time }}</strong>
                     </p>
 
                 {% endif %}
 
             </div>
 
+
+            <!-- STATUS INDICATOR -->
 
             <div class="status-indicator">
 
@@ -218,9 +336,9 @@
 </section>
 
 
-<!-- =========================
-     BOOK A TABLE
-========================= -->
+<!-- =========================================================
+     BOOK A TABLE CTA
+========================================================= -->
 
 <section class="booking-cta">
 
@@ -228,25 +346,32 @@
 
         <div class="booking-cta-card">
 
-            <p class="section-label">
-                YOUR TABLE IS WAITING
-            </p>
+            <div class="booking-cta-content">
 
-            <h2>
-                Make your next visit memorable.
-            </h2>
+                <p class="section-label">
+                    YOUR TABLE IS WAITING
+                </p>
 
-            <p>
-                Choose your date, time, guests, and table.
-                We will take care of the rest.
-            </p>
+                <h2>
+                    Make your next visit memorable.
+                </h2>
 
-            <a href="{% url 'book_table' %}"
-               class="hero-button primary-button">
+                <p>
+                    Choose your date, time, guests, and table.
+                    We will take care of the rest.
+                </p>
 
-                Book a Table
+            </div>
 
-            </a>
+
+            <div class="booking-cta-action">
+
+                <a href="{% url 'book_table' %}"
+                   class="hero-button primary-button">
+                    Book a Table
+                </a>
+
+            </div>
 
         </div>
 
@@ -255,15 +380,17 @@
 </section>
 
 
-<!-- =========================
+<!-- =========================================================
      SPECIAL OCCASIONS
-========================= -->
+========================================================= -->
 
 <section class="occasion-section">
 
     <div class="page-container">
 
         <div class="occasion-grid">
+
+            <!-- OCCASION CONTENT -->
 
             <div class="occasion-content">
 
@@ -272,30 +399,36 @@
                 </p>
 
                 <h2>
-                    Celebrate your moments with us.
+                    Celebrate your
+                    moments with us.
                 </h2>
 
                 <p>
                     Planning a birthday, get-together,
                     anniversary, or a special evening?
-                    Talk to our team and let us help make it memorable.
+                    Talk to our team and let us help
+                    make it memorable.
                 </p>
 
                 <a href="{% url 'contact' %}"
                    class="text-button">
-
                     Contact Us →
-
                 </a>
 
             </div>
 
 
+            <!-- OCCASION CARD -->
+
             <div class="occasion-card">
 
                 <div class="occasion-icon">
-                    ✨
+                    ✦
                 </div>
+
+                <p class="occasion-card-label">
+                    MAKE IT SPECIAL
+                </p>
 
                 <h3>
                     Let's Make It Special
@@ -310,9 +443,7 @@
 
                     <a href="tel:{{ cafe.phone }}"
                        class="call-button">
-
                         Call Us
-
                     </a>
 
                 {% endif %}
@@ -326,9 +457,9 @@
 </section>
 
 
-<!-- =========================
+<!-- =========================================================
      PROFILE SECTION
-========================= -->
+========================================================= -->
 
 {% if user.is_authenticated %}
 
@@ -358,23 +489,17 @@
 
                     <a href="{% url 'profile' %}"
                        class="hero-button primary-button">
-
                         My Profile
-
                     </a>
 
                     <a href="{% url 'my_orders' %}"
                        class="hero-button secondary-button">
-
                         My Orders
-
                     </a>
 
                     <a href="{% url 'my_reservation' %}"
                        class="hero-button secondary-button">
-
                         My Reservations
-
                     </a>
 
                 </div>
@@ -390,4 +515,97 @@
 {% endif %}
 
 
+<!-- =========================================================
+     FINAL BRAND STATEMENT
+========================================================= -->
+
+<section class="brand-statement">
+
+    <div class="page-container">
+
+        <p class="brand-statement-label">
+            LOCAL:BYTE
+        </p>
+
+        <h2>
+            Sip. Script. <span>Savor.</span>
+        </h2>
+
+        <p>
+            Come in. Sit back. Make it yours.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SCROLL REVEAL JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const revealElements = document.querySelectorAll(
+        ".signature-section, " +
+        ".about-section, " +
+        ".status-section, " +
+        ".booking-cta, " +
+        ".occasion-section, " +
+        ".profile-section, " +
+        ".brand-statement"
+    );
+
+
+    const observer = new IntersectionObserver(
+
+        function (entries) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add(
+                        "section-visible"
+                    );
+
+                    /*
+                     * Animation only needs to run once.
+                     * After the section becomes visible,
+                     * we no longer need to observe it.
+                     */
+
+                    observer.unobserve(entry.target);
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold: 0.15
+        }
+
+    );
+
+
+    revealElements.forEach(function (section) {
+
+        section.classList.add(
+            "section-reveal"
+        );
+
+        observer.observe(section);
+
+    });
+
+});
+
+</script>
+
+
 {% endblock %}
+
